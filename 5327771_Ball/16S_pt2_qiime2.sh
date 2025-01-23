@@ -2,11 +2,8 @@
 
 ##### qiime2 pt2: taxonomy and phylogeny #####
 
-#SBATCH -A kawoodbu
 #SBATCH -o slurm.%j.out               # STDOUT (%j = JobId)
 #SBATCH -e slurm.%j.err               # STDERR (%j = JobId)
-#SBATCH --mail-type=ALL               # Send a notification when the job starts, stops, or fails
-#SBATCH --mail-user=kawoodbu@asu.edu  # send-to address
 #SBATCH -t 1-0:00                    # estimated time needed - silva classifier takes a long time
 #SBATCH --mem=32G
 
