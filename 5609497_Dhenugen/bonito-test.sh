@@ -4,7 +4,6 @@
 #SBATCH -q wildfire
 #SBATCH -t 0-00:15:00
 
-#SBATCH -A kawoodbu
 #SBATCH -o slurm.%j.out               # STDOUT (%j = JobId)
 #SBATCH -e slurm.%j.err               # STDERR (%j = JobId)
 #SBATCH -C V100                       # bonito requires at least a volta level gpu card
