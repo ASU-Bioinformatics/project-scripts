@@ -13,9 +13,6 @@ from Bio import Entrez
 from Bio import SeqIO
 from urllib.error import HTTPError
 
-Entrez.email = 'kristina.buss@asu.edu'
-Entrez.api_key = '88f1bc3fefb8bfba181c831a5def97828309'
-
 #print(sys.argv)
 #idFile = open(sys.argv[1], "a")
 #idList = idFile.readlines()
