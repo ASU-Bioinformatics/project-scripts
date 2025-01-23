@@ -1,0 +1,51 @@
+name: /data/biocore/programs/conda-envs/bowtie2-env
+channels:
+  - silentgene
+  - bioconda
+  - conda-forge
+  - defaults
+  - ursky
+dependencies:
+  - _libgcc_mutex=0.1=conda_forge
+  - _openmp_mutex=4.5=1_gnu
+  - bowtie2=2.4.4=py39hbb4e92a_0
+  - bzip2=1.0.8=h7f98852_4
+  - c-ares=1.18.1=h7f98852_0
+  - ca-certificates=2022.9.24=ha878542_0
+  - certifi=2022.9.24=pyhd8ed1ab_0
+  - htslib=1.16=h6bc39ce_0
+  - krb5=1.19.2=hcc1bbae_0
+  - ld_impl_linux-64=2.36.1=hea4e1c9_1
+  - libcurl=7.86.0=h91b91d3_0
+  - libdeflate=1.13=h166bdaf_0
+  - libedit=3.1.20191231=he28a2e2_2
+  - libev=4.33=h516909a_1
+  - libffi=3.3=h58526e2_2
+  - libgcc-ng=12.2.0=h65d4601_19
+  - libgomp=12.2.0=h65d4601_19
+  - libnghttp2=1.46.0=hce63b2e_0
+  - libsqlite=3.40.0=h753d276_0
+  - libssh2=1.10.0=haa6b8db_3
+  - libstdcxx-ng=9.3.0=h6de172a_19
+  - libzlib=1.2.13=h166bdaf_4
+  - lz4-c=1.9.3=h9c3ff4c_0
+  - ncurses=6.3=h27087fc_1
+  - openssl=1.1.1s=h0b41bf4_1
+  - perl=5.32.1=0_h7f98852_perl5
+  - pip=21.1.3=pyhd8ed1ab_0
+  - python=3.9.7=h49503c6_0_cpython
+  - python_abi=3.9=2_cp39
+  - readline=8.1.2=h0f457ee_0
+  - samtools=1.16.1=h6899075_1
+  - setuptools=49.6.0=py39hf3d152e_3
+  - sqlite=3.40.0=h4ff8645_0
+  - tbb=2020.2=h4bd325d_4
+  - tk=8.6.12=h27826a3_0
+  - tzdata=2021a=he74cb21_1
+  - wheel=0.36.2=pyhd3deb0d_0
+  - xz=5.2.6=h166bdaf_0
+  - zlib=1.2.13=h166bdaf_4
+  - zstd=1.4.9=ha95c52a_0
+  - pip:
+      - humann==3.6
+prefix: /data/biocore/programs/conda-envs/bowtie2-env

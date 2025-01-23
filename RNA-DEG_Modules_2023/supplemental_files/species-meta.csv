@@ -1,0 +1,4 @@
+﻿Data,mus_musculus,homo_sapiens
+gprofiler2,mmusculus,hsapiens
+biomaRt,mmusculus_gene_ensembl,hsapiens_gene_ensembl
+OrgDB,org.Mm.eg.db,org.Hs.eg.db
