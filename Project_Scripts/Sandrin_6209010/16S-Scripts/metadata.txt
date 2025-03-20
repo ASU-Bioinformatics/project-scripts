@@ -1,0 +1,32 @@
+#SampleID	DiseaseState	Diagnosis	Age	Sex	Race
+#q2:types	categorical	categorical	numeric	categorical	categorical
+MB_001	Disease	Crohn's Disease - Naïve	17	Female	White
+MB_003	Disease	Ulcerative Colitis - Established	6	Male	White
+MB_004	Disease	Crohn's Disease - Established	17	Male	White
+MB_005	Disease	Crohn's Disease - Established	10	Female	White
+MB_006	Disease	Crohn's Disease - Established	14	Female	White
+MB_011	Disease	Ulcerative Colitis - Established	18	Female	White
+MB_012	Healthy	Healthy	14	Female	Hispanic/Latino
+MB_014	Disease	Ulcerative Colitis - Naïve	8	Female	White
+MB_016	Disease	Ulcerative Colitis - Naïve	13	Male	White
+MB_017	Disease	Celiac Disease	5	Male	White
+MB_018	Disease	Crohn's Disease - Established	7	Female	White
+MB_020	Healthy	Healthy	6	Female	White
+MB_023	Disease	Ulcerative Pancolitis - Established	11	Female	White
+MB_021	Disease	Ulcerative Colitis - Established	10	Female	Asian
+MB_024	Disease	Crohn's Disease - Established	14	Female	White
+MB_033	Disease	Crohn's Disease - Established	13	Female	White
+MB_039	Disease	Ulcerative Colitis - Naïve	16	Female	White
+MB_038	Disease	Ulcerative Colitis - Naïve	16	Male	White
+MB_040	Disease	Ulcerative Colitis - Established	14	Male	White
+MB_028	Disease	Ulcerative Colitis - Naïve	15	Female	White
+MB_044	Disease	Celiac Disease	6	Male	White
+MB_025	Disease	Crohn's Disease - Established	17	Male	White
+MB_035	Healthy	Healthy	11	Male	White
+MB_049	Disease	Ulcerative Colitis - Naïve	15	Female	White
+MB_050	Disease	Suspected IBD/ Healthy	17	Female	White
+MB_053	Disease	Crohn's Disease - Naïve	17	Male	White
+MB_055	Disease	Ulcerative Colitis - Naïve	11	Male	Hispanic/Latino
+MB_047	Disease	Ulcerative Colitis - Established	14	Female	Hispanic/Latino
+MB_045	Disease	Crohn's Disease - Established	14	Male	White
+MB_037	Healthy	Healthy	14	Female	White
