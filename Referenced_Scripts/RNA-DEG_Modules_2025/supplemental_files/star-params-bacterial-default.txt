@@ -1,0 +1,10 @@
+runThreadN 12
+readFilesCommand  gunzip -c
+outSAMtype  BAM SortedByCoordinate
+outSAMstrandField intronMotif
+outFilterIntronMotifs RemoveNoncanonical
+outFilterMatchNminOverLread 0.66
+outFilterScoreMinOverLread  0.66
+outFilterMatchNmin  0
+peOverlapNbasesMin  0
+alignIntronMax 1
