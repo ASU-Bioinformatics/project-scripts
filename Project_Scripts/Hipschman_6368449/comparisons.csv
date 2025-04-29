@@ -1,0 +1,10 @@
+﻿Name,Exp_vs_Control1,Exp_vs_Control2,Control2_vs_Control1,Exp_vs_Controls
+Cont1_A,1,0,1,1
+Cont2_A,0,1,-1,1
+Exp_A,-1,-1,0,-1
+Cont1_B,1,0,1,1
+Cont2_B,0,1,-1,1
+Exp_B,-1,-1,0,-1
+Cont1_C,1,0,1,1
+Cont2_C,0,1,-1,1
+Exp_C,-1,-1,0,-1
