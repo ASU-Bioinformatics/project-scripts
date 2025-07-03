@@ -1,0 +1,26 @@
+#SampleID	BarcodeSequence	LinkerPrimerSequence	Description	Replicate	Location	treatment	Replicates
+#q2:types	categorical	categorical	categorical	categorical	categorical	categorical	numeric
+1				susp	Shade	Tree	1
+2				susp	Shade	Tree	1
+3				susp	Shade	Tree	1
+4				susp	Shade	Tree	1
+5				snsp	Shade	Tree	2
+6				snsp	Shade	Tree	2
+7				snsp	Shade	Tree	2
+8				snsp	Shade	Tree	2
+9				spe	Sun	Field	3
+10				spe	Sun	Field	3
+11				spe	Sun	Field	3
+12				spe	Sun	Field	3
+13				snpe	Sun	Field	4
+14				snpe	Sun	Field	4
+15				snpe	Sun	Field	4
+16				snpe	Sun	Field	4
+17				shpb	Shade	Bin	5
+18				shpb	Shade	Bin	5
+19				shpb	Shade	Bin	5
+20				shpb	Shade	Bin	5
+21				sspb	Sun	Bin	6
+22				sspb	Sun	Bin	6
+23				sspb	Sun	Bin	6
+24				sspb	Sun	Bin	6
