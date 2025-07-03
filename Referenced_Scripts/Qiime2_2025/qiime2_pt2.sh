@@ -14,10 +14,10 @@ module purge
 
 ##### Define Variables #####
 
-METADATA="/data/gencore/analysis_projects/Marshall/16S/metadata.txt"
-DIRECTORY="/data/gencore/analysis_projects/Marshall/16S/qiime2"
-SAMPLING_DEPTH=186351 #lowest feature count from samples, found in table.qzv
-MIN_DEPTH=100 #something lower, to get a good curve from min_depth to sampling_depth
+metadata="/data/gencore/analysis_projects/Marshall/16S/metadata.txt"
+workDir="/data/gencore/analysis_projects/Marshall/16S/qiime2"
+sampleDepth=186351 #lowest feature count from samples, found in table.qzv
+minDepth=100 #something lower, to get a good curve from minDepth to sampleDepth
 
 #comment out a line to exclude a classifier, or add a new line to include a new classifier
 declare -A classifiers
@@ -35,9 +35,9 @@ categories="BarcodeSequence
 
 ##### Run Analysis #####
 
-source activate /data/biocore/programs/conda-envs/qiime2-2021.4
+source activate /data/biocore/programs/mamba-envs/qiime2-amplicon-2024.10-try2
 
-cd "$DIRECTORY"
+cd "$workDir"
 
 # Taxonomic analysis with selected classifiers
 for i in ${!classifiers[@]};
@@ -57,7 +57,7 @@ qiime metadata tabulate \
 qiime taxa barplot \
   --i-table table.qza \
   --i-taxonomy "$i"-taxonomy.qza \
-  --m-metadata-file "$METADATA" \
+  --m-metadata-file "$metadata" \
   --o-visualization "$i"-taxa-bar-plots.qzv
 
 qiime taxa collapse \
@@ -93,18 +93,18 @@ qiime phylogeny align-to-tree-mafft-fasttree \
 qiime diversity core-metrics-phylogenetic \
   --i-phylogeny rooted-tree.qza \
   --i-table table.qza \
-  --p-sampling-depth $SAMPLING_DEPTH \
-  --m-metadata-file "$METADATA" \
+  --p-sampling-depth $sampleDepth \
+  --m-metadata-file "$metadata" \
   --output-dir core-metrics-results
 
 qiime diversity alpha-group-significance \
   --i-alpha-diversity core-metrics-results/faith_pd_vector.qza \
-  --m-metadata-file "$METADATA" \
+  --m-metadata-file "$metadata" \
   --o-visualization core-metrics-results/faith-pd-group-significance.qzv
 
 qiime diversity alpha-group-significance \
   --i-alpha-diversity core-metrics-results/evenness_vector.qza \
-  --m-metadata-file "$METADATA" \
+  --m-metadata-file "$metadata" \
   --o-visualization core-metrics-results/evenness-group-significance.qzv
 
 #beta group significance, for each categorical column
@@ -115,28 +115,28 @@ do
 
   qiime diversity beta-group-significance \
     --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza \
-    --m-metadata-file "$METADATA" \
+    --m-metadata-file "$metadata" \
     --m-metadata-column "$j" \
     --o-visualization core-metrics-results/unweighted_unifrac_"$j"_significance.qzv \
     --p-pairwise
 
   qiime diversity beta-group-significance \
     --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza \
-    --m-metadata-file "$METADATA" \
+    --m-metadata-file "$metadata" \
     --m-metadata-column "$j" \
     --o-visualization core-metrics-results/weighted_unifrac_"$j"_significance.qzv \
     --p-pairwise
 
   qiime diversity beta-group-significance \
     --i-distance-matrix core-metrics-results/bray_curtis_distance_matrix.qza \
-    --m-metadata-file "$METADATA" \
+    --m-metadata-file "$metadata" \
     --m-metadata-column "$j" \
     --o-visualization core-metrics-results/bray_curtis_"$j"_significance.qzv \
     --p-pairwise
 
   qiime diversity beta-group-significance \
     --i-distance-matrix core-metrics-results/jaccard_distance_matrix.qza \
-    --m-metadata-file "$METADATA" \
+    --m-metadata-file "$metadata" \
     --m-metadata-column "$j" \
     --o-visualization core-metrics-results/jaccard_"$j"_significance.qzv \
     --p-pairwise
@@ -150,11 +150,11 @@ wait
 qiime diversity alpha-rarefaction \
   --i-table table.qza \
   --i-phylogeny rooted-tree.qza \
-  --p-min-depth $MIN_DEPTH \
-  --p-max-depth $SAMPLING_DEPTH \
+  --p-min-depth $minDepth \
+  --p-max-depth $sampleDepth \
   --p-steps 200 \
   --p-iterations 10 \
-  --m-metadata-file "$METADATA" \
+  --m-metadata-file "$metadata" \
   --o-visualization alpha-rarefaction.qzv
 
 conda deactivate
