@@ -78,3 +78,32 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
   -q /data/gencore/analysis_projects/8363170_Yang/paeruginosa-quants-bacterial-default \
   -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
 ```
+
+Unfortunately, most reads showed up as too short or as multimapped for this culture, so I'm going to run a different parameter setting to try to capture those.
+
+
+```
+# escherichia coli
+
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
+  -f /data/gencore/analysis_projects/8363170_Yang/fastq \
+  -i /scratch/8363170_Yang \
+  -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-short.txt \
+  -r /data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1 \
+  -a /data/gencore/analysis_projects/8363170_Yang/ecoli-alignment-bacterial-short \
+  -q /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short \
+  -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
+```
+
+```
+# pseudomonas aeruginosa
+
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
+  -f /data/gencore/analysis_projects/8363170_Yang/fastq \
+  -i /scratch/8363170_Yang \
+  -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-short.txt \
+  -r /data/gencore/databases/reference_genomes/pseudomonas_aeruginosa \
+  -a /data/gencore/analysis_projects/8363170_Yang/paeruginosa-alignment-bacterial-short \
+  -q /data/gencore/analysis_projects/8363170_Yang/paeruginosa-quants-bacterial-short \
+  -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
+```
