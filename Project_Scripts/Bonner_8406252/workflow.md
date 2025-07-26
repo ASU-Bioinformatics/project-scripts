@@ -857,7 +857,28 @@ The file names generated in this workflow are very long and unwieldy, so I'm goi
 ```
 cp 37N-FLAG-IP-vaccinia_STARAligned.filtered.samDupRm.R1.bam 37N-FLAG-IP-vaccinia.processed.bam
 cp 37N-FLAG-IP-vaccinia_STARAligned.filtered.samDupRm.R1.bam.bai 37N-FLAG-IP-vaccinia.processed.bam.bai
+cp 37N-Total-DI-vaccinia_STARAligned.filtered.samDupRm.R1.bam 37N-Total-DI-vaccinia.processed.bam
+cp 37N-Total-DI-vaccinia_STARAligned.filtered.samDupRm.R1.bam.bai 37N-Total-DI-vaccinia.processed.bam.bai
 cp 37N.vaccinia_STARAligned.filtered.samDupRm.R1.depth.normalized.bed 37N.vaccinia.depthNormalized.bed
+cp 37N.vaccinia_STARAligned.filtered.samDupRm.R1.depth.normalized.txt 37N.vaccinia.depthNormalized.txt
 cp 37N.vaccinia.PureCLIP.crosslink_sites.cov_inputSignal.merged.sorted.normFiltered.intersect.rmChr.gtf 37N.vaccinia.crosslinks.gtf
 cp 37N.vaccinia.PureCLIP.crosslink_sites.cov_inputSignal.merged.sorted.normFiltered.intersect.rmChr.onlyGenes.gtf 37N.vaccinia.crosslinks.genes.gtf
+
+cp 37N-FLAG-IP-mouse_STARAligned.filtered.samDupRm.R1.bam 37N-FLAG-IP-mouse.processed.bam
+cp 37N-FLAG-IP-mouse_STARAligned.filtered.samDupRm.R1.bam.bai 37N-FLAG-IP-mouse.processed.bam.bai
+cp 37N-Total-DI-mouse_STARAligned.filtered.samDupRm.R1.bam 37N-Total-DI-mouse.processed.bam
+cp 37N-Total-DI-mouse_STARAligned.filtered.samDupRm.R1.bam.bai 37N-Total-DI-mouse.processed.bam.bai
+cp 37N.mouse_STARAligned.filtered.samDupRm.R1.depth.normalized.bed 37N.mouse.depthNormalized.bed
+cp 37N.mouse_STARAligned.filtered.samDupRm.R1.depth.normalized.txt 37N.mouse.depthNormalized.txt
+cp 37N.mouse.PureCLIP.crosslink_sites.cov_inputSignal.merged.sorted.normFiltered.intersect.rmChr.gtf 37N.mouse.crosslinks.gtf
+cp 37N.mouse.PureCLIP.crosslink_sites.cov_inputSignal.merged.sorted.normFiltered.intersect.rmChr.onlyGenes.gtf 37N.mouse.crosslinks.genes.gtf
+
+cp Mock-FLAG-IP-mouse_STARAligned.filtered.samDupRm.R1.bam Mock-FLAG-IP-mouse.processed.bam
+cp Mock-FLAG-IP-mouse_STARAligned.filtered.samDupRm.R1.bam.bai Mock-FLAG-IP-mouse.processed.bam.bai
+cp Mock-Total-DI-mouse_STARAligned.filtered.samDupRm.R1.bam Mock-Total-DI-mouse.processed.bam
+cp Mock-Total-DI-mouse_STARAligned.filtered.samDupRm.R1.bam.bai Mock-Total-DI-mouse.processed.bam.bai
+cp Mock.mouse_STARAligned.filtered.samDupRm.R1.subsampled.depth.normalized.bed Mock.mouse.depthNormalized.bed
+cp Mock.mouse_STARAligned.filtered.samDupRm.R1.subsampled.depth.normalized.txt Mock.mouse.depthNormalized.txt
+cp Mock.mouse.PureCLIP.crosslink_sites.cov_inputSignal.subsampled.runNC.merged.sorted.normFiltered.intersect.rmChr.gtf Mock.mouse.crosslinks.gtf
+cp Mock.mouse.PureCLIP.crosslink_sites.cov_inputSignal.subsampled.runNC.merged.sorted.normFiltered.intersect.rmChr.onlyGenes.gtf Mock.mouse.crosslinks.genes.gtf
 ```
