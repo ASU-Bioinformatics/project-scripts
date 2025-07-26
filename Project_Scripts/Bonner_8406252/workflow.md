@@ -852,7 +852,7 @@ grep 'transcript_id ""' "$vdir"/37N.vaccinia.PureCLIP.crosslink_sites.cov_inputS
 
 ## Rename Final Output Files
 
-The file names generated in this workflow are very long and unwieldy, so I'm going to copy the output files for James into renamed files (so I don't lose the original naming for my backup data) and keep track of the renaming here.
+The file names generated in this workflow are very long and unwieldy, so I'm going to copy the output files into renamed files (so I don't lose the original naming for my backup data) and keep track of the renaming here.
 
 ```
 cp 37N-FLAG-IP-vaccinia_STARAligned.filtered.samDupRm.R1.bam 37N-FLAG-IP-vaccinia.processed.bam
@@ -881,4 +881,22 @@ cp Mock.mouse_STARAligned.filtered.samDupRm.R1.subsampled.depth.normalized.bed M
 cp Mock.mouse_STARAligned.filtered.samDupRm.R1.subsampled.depth.normalized.txt Mock.mouse.depthNormalized.txt
 cp Mock.mouse.PureCLIP.crosslink_sites.cov_inputSignal.subsampled.runNC.merged.sorted.normFiltered.intersect.rmChr.gtf Mock.mouse.crosslinks.gtf
 cp Mock.mouse.PureCLIP.crosslink_sites.cov_inputSignal.subsampled.runNC.merged.sorted.normFiltered.intersect.rmChr.onlyGenes.gtf Mock.mouse.crosslinks.genes.gtf
+
+cp 37N-FLAG-IP-vaccinia_STARAligned.sortedByCoord.out.bam 37N-FLAG-IP-vaccinia_alignOut.bam
+cp 37N-FLAG-IP-vaccinia_STARAligned.sortedByCoord.out.bam.bai 37N-FLAG-IP-vaccinia_alignOut.bam.bai
+cp 37N-Total-DI-vaccinia_STARAligned.sortedByCoord.out.bam 37N-Total-DI-vaccinia_alignOut.bam
+cp 37N-Total-DI-vaccinia_STARAligned.sortedByCoord.out.bam.bai 37N-Total-DI-vaccinia_alignOut.bam.bai
+cp Mock-FLAG-IP-vaccinia_STARAligned.sortedByCoord.out.bam Mock-FLAG-IP-vaccinia_alignOut.bam
+cp Mock-FLAG-IP-vaccinia_STARAligned.sortedByCoord.out.bam.bai Mock-FLAG-IP-vaccinia_alignOut.bam.bai
+cp Mock-Total-DI-vaccinia_STARAligned.sortedByCoord.out.bam Mock-Total-DI-vaccinia_alignOut.bam
+cp Mock-Total-DI-vaccinia_STARAligned.sortedByCoord.out.bam.bai Mock-Total-DI-vaccinia_alignOut.bam.bai
+
+cp 37N-FLAG-IP-mouse_STARAligned.sortedByCoord.out.bam 37N-FLAG-IP-mouse_alignOut.bam
+cp 37N-FLAG-IP-mouse_STARAligned.sortedByCoord.out.bam.bai 37N-FLAG-IP-mouse_alignOut.bam.bai
+cp 37N-Total-DI-mouse_STARAligned.sortedByCoord.out.bam 37N-Total-DI-mouse_alignOut.bam
+cp 37N-Total-DI-mouse_STARAligned.sortedByCoord.out.bam.bai 37N-Total-DI-mouse_alignOut.bam.bai
+cp Mock-FLAG-IP-mouse_STARAligned.sortedByCoord.out.bam Mock-FLAG-IP-mouse_alignOut.bam
+cp Mock-FLAG-IP-mouse_STARAligned.sortedByCoord.out.bam.bai Mock-FLAG-IP-mouse_alignOut.bam.bai
+cp Mock-Total-DI-mouse_STARAligned.sortedByCoord.out.bam Mock-Total-DI-mouse_alignOut.bam
+cp Mock-Total-DI-mouse_STARAligned.sortedByCoord.out.bam.bai Mock-Total-DI-mouse_alignOut.bam.bai
 ```
