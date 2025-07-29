@@ -58,7 +58,7 @@ I'm using the GitHub repository for the RNA scripts this time, now that it's con
 
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
   -f /data/gencore/analysis_projects/8363170_Yang/fastq \
-  -i /scratch/8363170_Yang \
+  -i /scratch/kawoodbu/8363170_Yang \
   -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-default.txt \
   -r /data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1 \
   -a /data/gencore/analysis_projects/8363170_Yang/ecoli-alignment-bacterial-default \
@@ -71,7 +71,7 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
 
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
   -f /data/gencore/analysis_projects/8363170_Yang/fastq \
-  -i /scratch/8363170_Yang \
+  -i /scratch/kawoodbu/8363170_Yang \
   -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-default.txt \
   -r /data/gencore/databases/reference_genomes/pseudomonas_aeruginosa \
   -a /data/gencore/analysis_projects/8363170_Yang/paeruginosa-alignment-bacterial-default \
@@ -87,7 +87,7 @@ Unfortunately, most reads showed up as too short or as multimapped for this cult
 
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
   -f /data/gencore/analysis_projects/8363170_Yang/fastq \
-  -i /scratch/8363170_Yang \
+  -i /scratch/kawoodbu/8363170_Yang \
   -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-short.txt \
   -r /data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1 \
   -a /data/gencore/analysis_projects/8363170_Yang/ecoli-alignment-bacterial-short \
@@ -100,7 +100,7 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
 
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
   -f /data/gencore/analysis_projects/8363170_Yang/fastq \
-  -i /scratch/8363170_Yang \
+  -i /scratch/kawoodbu/8363170_Yang \
   -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-short.txt \
   -r /data/gencore/databases/reference_genomes/pseudomonas_aeruginosa \
   -a /data/gencore/analysis_projects/8363170_Yang/paeruginosa-alignment-bacterial-short \
