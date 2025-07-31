@@ -79,8 +79,7 @@ done
 
 if [ "$help" == "TRUE" ]; then
   cat << EOF
-  This script is used to quantify the abundance of each transcript
-  from the reference GTF in a single STAR alignment file.
+  This script is used to align a single sample to the provided reference genome.
 
   usage: bash A1.cpu-align.sh -s id -f fdir -i idir -p txt -r rdir -o odir (-t) (-d)
 

@@ -5,10 +5,12 @@
 These samples are dual culture E. coli and Pseudomonas aeruginosa. I don't have STAR indexes made for either species, so I'll be running genome generate twice.
 For consistency with past projects from Jiseon, I'm using the CFT073 E. coli strain instead of the K-12 standard.
 
+The first attempt at building the E. coli indexes failed because there was a space in column two for most entries, which threw off STAR's ability to detect which features were CDS. I used the code `sed -i 's/Protein[[:space:]]Homology/ProteinHomology/g' CFT073.genomic.gtf` to remove that extra space.
+
 ```
 # escherichia coli
 
-refDir="/data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1"
+refDir="/data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1/starTry2"
 fasta="$refDir"/"CFT073.genomic.fna"
 gtf="$refDir"/"CFT073.genomic.gtf"
 
@@ -22,6 +24,7 @@ STAR \
   --sjdbGTFfile "$gtf" \
   --sjdbOverhang 151 \
   --sjdbGTFfeatureExon CDS \
+  --genomeSAindexNbases 10 \
   --limitGenomeGenerateRAM 3000000000000
 ```
 
@@ -60,7 +63,7 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
   -f /data/gencore/analysis_projects/8363170_Yang/fastq \
   -i /scratch/kawoodbu/8363170_Yang \
   -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-default.txt \
-  -r /data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1 \
+  -r /data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1/starTry2 \
   -a /data/gencore/analysis_projects/8363170_Yang/ecoli-alignment-bacterial-default \
   -q /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-default \
   -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
@@ -87,9 +90,9 @@ Unfortunately, most reads showed up as too short or as multimapped for this cult
 
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
   -f /data/gencore/analysis_projects/8363170_Yang/fastq \
-  -i /scratch/kawoodbu/8363170_Yang \
+  -i /scratch/kawoodbu/8363170_Yang_ecoli \
   -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-short.txt \
-  -r /data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1 \
+  -r /data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1/starTry2 \
   -a /data/gencore/analysis_projects/8363170_Yang/ecoli-alignment-bacterial-short \
   -q /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short \
   -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
@@ -100,10 +103,50 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
 
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
   -f /data/gencore/analysis_projects/8363170_Yang/fastq \
-  -i /scratch/kawoodbu/8363170_Yang \
+  -i /scratch/kawoodbu/8363170_Yang_pseudo \
   -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-short.txt \
   -r /data/gencore/databases/reference_genomes/pseudomonas_aeruginosa \
   -a /data/gencore/analysis_projects/8363170_Yang/paeruginosa-alignment-bacterial-short \
   -q /data/gencore/analysis_projects/8363170_Yang/paeruginosa-quants-bacterial-short \
   -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
+```
+
+Again here most of the reads were multimapped. STAR will use the multimapped reads, but I'm concerned based on the percentages that many of these reads are binding multiple times to places on the genome that are very similar between species. For this reason I'm going to require slightly longer binding length but reduce the multimapping max number.
+
+```
+# escherichia coli
+
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
+  -f /data/gencore/analysis_projects/8363170_Yang/fastq \
+  -i /scratch/kawoodbu/8363170_Yang_ecoli \
+  -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-short30-3max.txt \
+  -r /data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1/starTry2 \
+  -a /data/gencore/analysis_projects/8363170_Yang/ecoli-alignment-bacterial-short30 \
+  -q /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short30 \
+  -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
+```
+
+```
+# pseudomonas aeruginosa
+# I forgot to change the output folder name for this one so it overwrote the regular bacterial short parameters
+# but the results from that were so bad I don't think it really matters
+
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
+  -f /data/gencore/analysis_projects/8363170_Yang/fastq \
+  -i /scratch/kawoodbu/8363170_Yang_pseudo \
+  -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-short30-3max.txt \
+  -r /data/gencore/databases/reference_genomes/pseudomonas_aeruginosa \
+  -a /data/gencore/analysis_projects/8363170_Yang/paeruginosa-alignment-bacterial-short \
+  -q /data/gencore/analysis_projects/8363170_Yang/paeruginosa-quants-bacterial-short \
+  -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
+```
+
+## Module B: Differential Expression
+
+```
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/B1.DEG.rscripts.sh \
+  -d /data/gencore/analysis_projects/8363170_Yang/ecoli-differentials-bacterial-short30 \
+  -g /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short30/matrix.csv \
+  -c /data/gencore/analysis_projects/8363170_Yang/comparisons.csv \
+  -s "deseq2 edger noiseq"
 ```

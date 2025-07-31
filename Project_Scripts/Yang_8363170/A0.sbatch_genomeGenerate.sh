@@ -12,9 +12,9 @@
 module load mamba/latest
 source activate /data/biocore/programs/mamba-envs/biocore-rna
 
-refDir="/data/gencore/databases/reference_genomes/pseudomonas_aeruginosa"
-fasta="$refDir"/"GCF_000006765.1_PAO1.genomic.fna"
-gtf="$refDir"/"GCF_000006765.1_PAO1.genomic.gtf"
+refDir="/data/gencore/databases/reference_genomes/ecoli/CFT073_GCF_014262945.1_ASM1426294v1/starTry2"
+fasta="$refDir"/"CFT073.genomic.fna"
+gtf="$refDir"/"CFT073.genomic.gtf"
 
 cd "$refDir"
 
@@ -26,7 +26,5 @@ STAR \
   --sjdbGTFfile "$gtf" \
   --sjdbOverhang 151 \
   --sjdbGTFfeatureExon CDS \
+  --genomeSAindexNbases 10 \
   --limitGenomeGenerateRAM 3000000000000
-
-
-#--sjdbGTFtagExonParentTranscript transcript \

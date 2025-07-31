@@ -3,10 +3,10 @@
 #SBATCH -N 1
 #SBATCH -p general
 #SBATCH -q public #sol only, phx doesn't have an updated STAR module.
-#SBATCH -t 0-8
+#SBATCH -t 0-8:00
 #SBATCH --mem=100G
 #SBATCH -o slurm.%j.starGG.hare-myx.out
-#SBATCH -o slurm.%j.starGG.hare-myx.err
+#SBATCH -e slurm.%j.starGG.hare-myx.err
 
 
 module load mamba/latest
