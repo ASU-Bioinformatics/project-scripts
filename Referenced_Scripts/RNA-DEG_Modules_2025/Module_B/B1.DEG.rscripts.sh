@@ -63,10 +63,10 @@ if [ "$help" == "TRUE" ]; then
   This script is used to run prewritten R scripts for differential gene expression analysis
   The current tools available are edgeR, DESeq2, and NOISeq.
 
-  usage: bash B1.DEG.rscripts.sh -d /path/to/output/folder \
-  |                              -g /path/to/matrix.csv \
-  |                              -c /path/to/comparisons.csv \
-  |                              -s "deseq2 edger noiseq"
+  usage: bash B1.DEG.rscripts.sh -d /path/to/output/folder
+                                 -g /path/to/matrix.csv
+                                 -c /path/to/comparisons.csv
+                                 -s "deseq2 edger noiseq"
 
   options:
     [ -d  |   --directory   |   folder name for DE analysis output                                                 ]
