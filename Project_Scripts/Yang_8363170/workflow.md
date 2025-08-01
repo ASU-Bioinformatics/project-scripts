@@ -141,12 +141,50 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
   -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
 ```
 
+There was an unexplainable error for sample Spx21-Ground-Mid-G2AG in the Pseudomonas alignment (it said biocore-rna wasn't a conda environment, when it had worked for all other samples). So, I have to rerun that sample separately and then restart the merge and quant scripts.
+
+```
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A1.cpu-align.sh \
+  -s Spx21-Ground-Mid-G2AG \
+  -f /data/gencore/analysis_projects/8363170_Yang/fastq \
+  -i /scratch/kawoodbu/8363170_Yang_pseudo \
+  -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-bacterial-short30-3max.txt \
+  -r /data/gencore/databases/reference_genomes/pseudomonas_aeruginosa \
+  -o /data/gencore/analysis_projects/8363170_Yang/paeruginosa-alignment-bacterial-short
+
+for i in $(find /data/gencore/analysis_projects/8363170_Yang/fastq -type f -name "*fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1 | sort | uniq)
+do
+  echo $i
+  sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A2.stringtie-quant.sh \
+    -s "$i" \
+    -a /data/gencore/analysis_projects/8363170_Yang/paeruginosa-alignment-bacterial-short30 \
+    -q /data/gencore/analysis_projects/8363170_Yang/paeruginosa-quants-bacterial-short30 \
+    -g /data/gencore/databases/reference_genomes/pseudomonas_aeruginosa/GCF_000006765.1_PAO1.genomic.gtf
+done
+
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A3.merge-quant.sh \
+  -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A \
+  -q /data/gencore/analysis_projects/8363170_Yang/paeruginosa-quants-bacterial-short30 \
+  -a /data/gencore/analysis_projects/8363170_Yang/paeruginosa-alignment-bacterial-short30
+```
+
 ## Module B: Differential Expression
 
 ```
+# e. coli
+
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/B1.DEG.rscripts.sh \
   -d /data/gencore/analysis_projects/8363170_Yang/ecoli-differentials-bacterial-short30 \
-  -g /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short30/matrix.csv \
+  -g /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short30/gene_count_matrix.csv \
   -c /data/gencore/analysis_projects/8363170_Yang/comparisons.csv \
   -s "deseq2 edger noiseq"
+
+# p. aeruginosa
+
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/B1.DEG.rscripts.sh \
+  -d /data/gencore/analysis_projects/8363170_Yang/ecoli-differentials-bacterial-short30 \
+  -g /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short30/gene_count_matrix.csv \
+  -c /data/gencore/analysis_projects/8363170_Yang/comparisons.csv \
+  -s "deseq2 edger noiseq"
+
 ```
