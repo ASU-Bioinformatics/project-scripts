@@ -14,8 +14,8 @@ module load r-4.2.2-gcc-11.2.0
 help="FALSE"
 
 ## input variables from command line ##
-VALID_ARGS=$(getopt -o d:g:c:s: \
-                    --long directory:,geneMatrix:,comparisons:,script: \
+VALID_ARGS=$(getopt -o d:g:c:s:h \
+                    --long directory:,geneMatrix:,comparisons:,script:,help \
                     -- "$@")
 if [[ $? -ne 0 ]]; then
   exit 1;
@@ -46,7 +46,7 @@ while [ : ]; do
         ;;
     -h | --help)
         help="TRUE"
-        shift 2
+        shift
         ;;
     --)
         shift;
@@ -64,9 +64,9 @@ if [ "$help" == "TRUE" ]; then
   The current tools available are edgeR, DESeq2, and NOISeq.
 
   usage: bash B1.DEG.rscripts.sh -d /path/to/output/folder \
-                                 -g /path/to/matrix.csv \
-                                 -c /path/to/comparisons.csv \
-                                 -s "deseq2 edger noiseq"
+  |                              -g /path/to/matrix.csv \
+  |                              -c /path/to/comparisons.csv \
+  |                              -s "deseq2 edger noiseq"
 
   options:
     [ -d  |   --directory   |   folder name for DE analysis output                                                 ]
@@ -87,14 +87,17 @@ do
   if [[ $i == "deseq2" ]]; then
     Rscript /data/gencore/shared_scripts/RNAseq/RNA-DEGs-Modular-240314-v1.0.2/Module_B/B2.deseq2.R \
       -d $directory -g $geneMatrix -c $comparisons
+    chmod -R g+w *
 
   elif [[ $i == "edger" ]]; then
     Rscript /data/gencore/shared_scripts/RNAseq/RNA-DEGs-Modular-240314-v1.0.2/Module_B/B3.edgeR.R \
       -d $directory -g $geneMatrix -c $comparisons
+    chmod -R g+w *
 
   elif [[ $i == "noiseq" ]]; then
     Rscript /data/gencore/shared_scripts/RNAseq/RNA-DEGs-Modular-240314-v1.0.2/Module_B/B4.noiseq.R \
       -d $directory -g $geneMatrix -c $comparisons
+    chmod -R g+w *
 
   else
     echo "The script name provided cannot be processed."

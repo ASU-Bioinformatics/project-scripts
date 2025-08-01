@@ -31,7 +31,7 @@ STAR \
   --sjdbGTFfeatureExon exon \
   --limitGenomeGenerateRAM 3000000000000
 
-
+chmod -R g+w *
 #--sjdbGTFtagExonParentTranscript transcript \
 
 ### STAR Dual Genome Indexes ###
