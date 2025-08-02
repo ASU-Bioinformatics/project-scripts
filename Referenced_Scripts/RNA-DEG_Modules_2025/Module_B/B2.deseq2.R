@@ -6,13 +6,13 @@ lapply(pkg1,
 #### READ IN ARGUMENTS ####
 option_list <- list(
   make_option(c("-d", "--directory"), type="character",
-              default="/Volumes/Gencore/sftp/g_mcfadden/7763550_RNA/2.alignment-dual-short/quants",
+              default="/data/gencore/analysis_projects/8363170_Yang/ecoli-differentials-bacterial-short30",
               help="path to count matrix and template information"),
   make_option(c("-g", "--genes"), type="character",
-              default="/Volumes/Gencore/sftp/g_mcfadden/7763550_RNA/2.alignment-dual-short/quants/gene_count_matrix.csv",
+              default="/data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short30/gene_count_matrix.csv",
               help="count matrix file name"),
   make_option(c("-c", "--comparisons"), type="character",
-              default="/Volumes/Gencore/analysis_projects/7763550_Junior_RNA/comparisons.csv",
+              default="/data/gencore/analysis_projects/8363170_Yang/comparisons.csv",
               help="comparisons for differential expression")
 )
 
@@ -28,6 +28,7 @@ gcnts <- gcnts[ , order(colnames(gcnts)) ]
 print(colnames(gcnts))
 
 comparisons <- read.csv(opts$comparisons, header=TRUE, row.names = NULL)
+print(comparisons)
 
 comparisons <- comparisons[ order(comparisons$Name), ]
 print(comparisons$Name)

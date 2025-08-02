@@ -87,17 +87,17 @@ do
   if [[ $i == "deseq2" ]]; then
     Rscript /data/gencore/shared_scripts/RNAseq/RNA-DEGs-Modular-240314-v1.0.2/Module_B/B2.deseq2.R \
       -d $directory -g $geneMatrix -c $comparisons
-    chmod -R g+w *
+    chmod -R g+w $directory
 
   elif [[ $i == "edger" ]]; then
     Rscript /data/gencore/shared_scripts/RNAseq/RNA-DEGs-Modular-240314-v1.0.2/Module_B/B3.edgeR.R \
       -d $directory -g $geneMatrix -c $comparisons
-    chmod -R g+w *
+    chmod -R g+w $directory
 
   elif [[ $i == "noiseq" ]]; then
     Rscript /data/gencore/shared_scripts/RNAseq/RNA-DEGs-Modular-240314-v1.0.2/Module_B/B4.noiseq.R \
       -d $directory -g $geneMatrix -c $comparisons
-    chmod -R g+w *
+    chmod -R g+w $directory
 
   else
     echo "The script name provided cannot be processed."

@@ -170,6 +170,8 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
 
 ## Module B: Differential Expression
 
+After speaking with Jiseon, I set up the comparisons file with only the comparisons Treated v. Untreated and Flight v. Ground. I did also look at some other comparisons, especially between the two cultures, and didn't observe any batch effect.
+
 ```
 # e. coli
 
@@ -182,9 +184,85 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
 # p. aeruginosa
 
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/B1.DEG.rscripts.sh \
-  -d /data/gencore/analysis_projects/8363170_Yang/ecoli-differentials-bacterial-short30 \
-  -g /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short30/gene_count_matrix.csv \
+  -d /data/gencore/analysis_projects/8363170_Yang/paeruginosa-differentials-bacterial-short30 \
+  -g /data/gencore/analysis_projects/8363170_Yang/paeruginosa-quants-bacterial-short30/gene_count_matrix.csv \
   -c /data/gencore/analysis_projects/8363170_Yang/comparisons.csv \
   -s "deseq2 edger noiseq"
+```
+
+The next step is to merge the results into a summary output of the three tools, and create some Venn diagrams to visualize the overlap in DEG calls.
 
 ```
+source activate /data/biocore/programs/mamba-envs/biocore-rna
+python /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/merge_de_both.py /data/gencore/analysis_projects/8363170_Yang/comparisons.csv 0
+## Module C: Differential Expression
+
+Because these are non-standard genomes (or at least they aren't easily accessible in the programs I use for GO comparisons), I use the GFF files to create a GO to Genes correlation table for the genome.
+
+```
+# e. coli
+grep 'GO' CFT073.genomic.gff | grep -o '\Parent[^;]*' | awk -F '-' '{ print $2 }' > gene-ids.txt
+grep -o '\Ontology_term[^;]*' CFT073.genomic.gff | awk -F '=' '{ print $2 }' > gos.txt
+
+paste gene-ids.txt gos.txt > CFT073.ids-and-gos.txt
+
+awk 'BEGIN{FS=OFS="\t"}
+  {
+    gos=$2;
+    len=length(gos);
+    for(i=1; i<len; i=i+11){
+      $2="\"" substr(gos, i, 10) "\"";
+      print;
+    }
+  }' CFT073.ids-and-gos.txt > CFT073.ids-and-gos.oneline.txt
+
+sort CFT073.ids-and-gos.oneline.txt | uniq | awk -v OFS='\t' '{ print $2, $1 }' | sed 's/\"//g' > CFT073.goterms.txt
+```
+
+None of the annotation files for P. aeruginosa contained GO terms, so I had the option either to run Interproscan to identify some or just omit functional profiling. Since it's a bacterial genome and Jiseon is a long-time collaborator, I chose to run Interproscan.
+
+```
+# p.aeruginosa
+
+#!/bin/bash
+
+##### interproscan functional annotation of genome assemblies #####
+
+#SBATCH -o slurm.%j.interproscan.out               # STDOUT (%j = JobId)
+#SBATCH -e slurm.%j.interproscan.err               # STDERR (%j = JobId)
+#SBATCH -p htc
+#SBATCH -q public
+#SBATCH -t 0-4:00                    # estimated time needed - this is quite fast since this is a small genome
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+
+module load openjdk-17.0.3_7-gcc-12.1.0 # sol
+
+cd /data/gencore/databases/reference_genomes/pseudomonas_aeruginosa
+
+faa=/data/gencore/databases/reference_genomes/pseudomonas_aeruginosa/GCF_000006765.1_PAO1.protein.faa
+
+echo "scanning sample P. aeruginosa genome in file $faa"
+  /data/biocore/programs/interproscan-5.69-101.0/interproscan.sh -i "$faa" -t p \
+                                                      -iprlookup -goterms \
+                                                      -verbose -b ./GCF_000006765.1_PAO1.ips-out
+```
+
+```
+grep 'GO' GCF_000006765.1_PAO1.genomic.gff | grep -o '\Parent[^;]*' | awk -F '-' '{ print $2 }' > gene-ids.txt
+grep -o '\Ontology_term[^;]*' CFT073.genomic.gff | awk -F '=' '{ print $2 }' > gos.txt
+
+paste gos.txt gene-ids.txt > CFT073.ids-and-gos.txt
+
+awk 'BEGIN{FS=OFS="\t"}
+  {
+    gos=$2;
+    len=length(gos);
+    for(i=1; i<len; i=i+11){
+      $2="\"" substr(gos, i, 10) "\"";
+      print;
+    }
+  }' CFT073.ids-and-gos.txt > CFT073.ids-and-gos.oneline.txt
+sort CFT073.ids-and-gos.oneline.txt | uniq > CFT073.goterms.txt
+```
+Once the GO terms are established, I can try to proceed with the functional annotation.
