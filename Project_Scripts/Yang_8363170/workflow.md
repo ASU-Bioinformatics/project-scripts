@@ -195,7 +195,9 @@ The next step is to merge the results into a summary output of the three tools, 
 ```
 source activate /data/biocore/programs/mamba-envs/biocore-rna
 python /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/merge_de_both.py /data/gencore/analysis_projects/8363170_Yang/comparisons.csv 0
-## Module C: Differential Expression
+```
+
+## Module C: Functional Enrichment
 
 Because these are non-standard genomes (or at least they aren't easily accessible in the programs I use for GO comparisons), I use the GFF files to create a GO to Genes correlation table for the genome.
 
@@ -248,6 +250,7 @@ echo "scanning sample P. aeruginosa genome in file $faa"
                                                       -verbose -b ./GCF_000006765.1_PAO1.ips-out
 ```
 
+
 ```
 grep 'GO' GCF_000006765.1_PAO1.genomic.gff | grep -o '\Parent[^;]*' | awk -F '-' '{ print $2 }' > gene-ids.txt
 grep -o '\Ontology_term[^;]*' CFT073.genomic.gff | awk -F '=' '{ print $2 }' > gos.txt
@@ -265,4 +268,5 @@ awk 'BEGIN{FS=OFS="\t"}
   }' CFT073.ids-and-gos.txt > CFT073.ids-and-gos.oneline.txt
 sort CFT073.ids-and-gos.oneline.txt | uniq > CFT073.goterms.txt
 ```
+
 Once the GO terms are established, I can try to proceed with the functional annotation.
