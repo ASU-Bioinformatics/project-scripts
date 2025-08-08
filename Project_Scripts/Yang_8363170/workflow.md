@@ -181,6 +181,14 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
   -c /data/gencore/analysis_projects/8363170_Yang/comparisons.csv \
   -s "deseq2 edger noiseq"
 
+# e. coli with IDs only, for functional enrichment
+
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/B1.DEG.rscripts.sh \
+  -d /data/gencore/analysis_projects/8363170_Yang/ecoli-differentials-idsonly-bacterial-short30 \
+  -g /data/gencore/analysis_projects/8363170_Yang/ecoli-quants-bacterial-short30/gene_count_matrix_idsonly.csv \
+  -c /data/gencore/analysis_projects/8363170_Yang/comparisons.csv \
+  -s "deseq2 edger noiseq"
+
 # p. aeruginosa
 
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/B1.DEG.rscripts.sh \
@@ -221,6 +229,13 @@ awk 'BEGIN{FS=OFS="\t"}
 sort CFT073.ids-and-gos.oneline.txt | uniq | awk -v OFS='\t' '{ print $2, $1 }' | sed 's/\"//g' > CFT073.goterms.txt
 ```
 
+So, after I did this I ran into some errors trying to use my custom scripts from before. Looking back at another experiment, I saw a simpler way to create this file that should hopefully avoid those errors! The gene ontology GAF file can be downloaded via the FTP option on the genome page at NCBI.
+
+```
+grep 'GO' GCF_014262945.1_ASM1426294v1_gene_ontology.gaf | awk '{print $5,$3}' | tr ' ' '\t' > CFT073-fast-goterms.txt
+```
+
+
 None of the annotation files for P. aeruginosa contained GO terms, so I had the option either to run Interproscan to identify some or just omit functional profiling. Since it's a bacterial genome and Jiseon is a long-time collaborator, I chose to run Interproscan.
 
 ```
@@ -250,9 +265,45 @@ echo "scanning sample P. aeruginosa genome in file $faa"
                                                       -verbose -b ./GCF_000006765.1_PAO1.ips-out
 ```
 
+```
+awk -F "\t" '{ print $9 }' GCF_000006765.1_PAO1.genomic.gtf | grep -o '\gene_id [^;]*' | awk '{ print $2 }' > gene_ids.txt
+
+awk -F "\t" '{ print $9 }' GCF_000006765.1_PAO1.genomic.gtf | grep -o '\protein_id [^;]*' | awk '{ print $2 }' > protein_ids.txt
+
+paste gene_ids.txt protein_ids.txt |sort | uniq > gene-to-protein.txt
+
+sed -i 's/"//g' gene-to-protein.txt
+
+grep -o '\Ontology_term[^;]*' GCF_000006765.1_PAO1.ips-out.gff3 | awk -F '=' '{ print $2 }' > ips-gos.txts
+
+grep '\Ontology_term[^;]*' GCF_000006765.1_PAO1.ips-out.gff3 | awk '{print $1}' > ips-protein-ids.txt
+
+paste ips-protein-ids.txt ips-gos.txts > protein-ids-to-gos.txt
+
+awk 'BEGIN{FS=OFS="\t"}
+  {
+    gos=$2;
+    len=length(gos);
+    for(i=2; i<len; i=i+13){
+      $2="\"" substr(gos, i, 10) "\"";
+      print;
+    }
+  }' protein-ids-to-gos.txt > protein-ids-to-gos-oneline.txt
+
+sort protein-ids-to-gos-oneline.txt | uniq > protein-ids-to-gos-nodups.txt
+
+sed -i 's/"//g' protein-ids-to-gos-nodups.txt
+
+join -1 2 -2 1 -o 1.1,2.2 <(sort -k2 gene-to-protein.txt) <(sort -k1 protein-ids-to-gos-nodups.txt) > gene-to-go.txt
+
+join -1 2 -2 1 -o 2.2,1.1 <(sort -k2 gene-to-protein.txt) <(sort -k1 protein-ids-to-gos-nodups.txt) > go-to-gene.txt
+
+sed -i 's/ /\t/g' go-to-gene.txt
+```
+
 
 ```
-grep 'GO' GCF_000006765.1_PAO1.genomic.gff | grep -o '\Parent[^;]*' | awk -F '-' '{ print $2 }' > gene-ids.txt
+grep 'GO' CFT073.genomic.gff | grep -o '\Parent[^;]*' | awk -F '-' '{ print $2 }' > gene-ids.txt
 grep -o '\Ontology_term[^;]*' CFT073.genomic.gff | awk -F '=' '{ print $2 }' > gos.txt
 
 paste gos.txt gene-ids.txt > CFT073.ids-and-gos.txt
@@ -269,4 +320,4 @@ awk 'BEGIN{FS=OFS="\t"}
 sort CFT073.ids-and-gos.oneline.txt | uniq > CFT073.goterms.txt
 ```
 
-Once the GO terms are established, I can try to proceed with the functional annotation.
+Once the GO terms are established, I can proceed with the functional annotation. Those scripts are included in separate R files.
