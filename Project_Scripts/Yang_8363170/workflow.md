@@ -299,6 +299,8 @@ join -1 2 -2 1 -o 1.1,2.2 <(sort -k2 gene-to-protein.txt) <(sort -k1 protein-ids
 join -1 2 -2 1 -o 2.2,1.1 <(sort -k2 gene-to-protein.txt) <(sort -k1 protein-ids-to-gos-nodups.txt) > go-to-gene.txt
 
 sed -i 's/ /\t/g' go-to-gene.txt
+
+cp go-to-gene.txt PAO1.goterms.txt
 ```
 
 
