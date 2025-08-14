@@ -12,10 +12,9 @@
 module load mamba/latest
 source activate /data/biocore/programs/mamba-envs/biocore-rna
 
-refDir="/data/gencore/databases/reference_genomes/hare/hare-myxoma-dual"
-fasta="$refDir"/"hare-myxoma-dual.fasta"
-#gff="$refDir"/"GCF_033115175.1_mLepTim1.pri_genomic.gff"
-gtf="$refDir"/"hare-myxoma-dual.gtf"
+refDir="/data/gencore/databases/reference_genomes/bovine"
+fasta="$refDir"/"GCF_002263795.3_ARS-UCD2.0_genomic.fna"
+gtf="$refDir"/"GCF_002263795.3_ARS-UCD2.0_genomic.gtf"
 
 cd "$refDir"
 
