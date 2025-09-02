@@ -323,3 +323,34 @@ sort CFT073.ids-and-gos.oneline.txt | uniq > CFT073.goterms.txt
 ```
 
 Once the GO terms are established, I can proceed with the functional annotation. Those scripts are included in separate R files.
+
+# Mistake Fixing
+
+I realized shortly after returning this data that I had inverted the control and experimental groups in the comparisons.csv file, so I am rerunning the DEG and functional enrichment scripts.
+
+## DEG
+
+```
+# e. coli
+
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/B1.DEG.rscripts.sh \
+  -d /data/gencore/sftp/j_yang/8363170-RNA/5_differential-expression_ecoli \
+  -g /data/gencore/sftp/j_yang/8363170-RNA/4_counts_ecoli/gene_count_matrix.csv \
+  -c /data/gencore/analysis_projects/completed_projects/8363170_Yang/comparisons.csv \
+  -s "deseq2 edger noiseq"
+
+# p. aeruginosa
+
+sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/B1.DEG.rscripts.sh \
+  -d /data/gencore/sftp/j_yang/8363170-RNA/5_differential-expression_paeruginosa \
+  -g /data/gencore/sftp/j_yang/8363170-RNA/4_counts_paeruginosa/gene_count_matrix.csv \
+  -c /data/gencore/analysis_projects/completed_projects/8363170_Yang/comparisons.csv \
+  -s "deseq2 edger noiseq"
+```
+
+The next step is to merge the results into a summary output of the three tools, and create some Venn diagrams to visualize the overlap in DEG calls.
+
+```
+source activate /data/biocore/programs/mamba-envs/biocore-rna
+python /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_B/merge_de_both.py /data/gencore/analysis_projects/completed_projects/8363170_Yang/comparisons.csv 0
+```
