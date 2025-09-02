@@ -5,11 +5,14 @@
 These samples are bovine, and since I don't have STAR indexes made I'll be running genome generate.
 
 ```
-refDir="/data/gencore/databases/reference_genomes/bovine"
-fasta="$refDir"/"GCF_002263795.3_ARS-UCD2.0_genomic.fna"
-gtf="$refDir"/"GCF_002263795.3_ARS-UCD2.0_genomic.gtf"
+refDir="/data/gencore/databases/reference_genomes/bovine/bos-taurus-UMD3.1"
+fasta="$refDir"/"GCF_000003055.6_Bos_taurus_UMD_3.1.1_genomic.fna"
+gff="$refDir"/"GCF_000003055.6_Bos_taurus_UMD_3.1.1_genomic.gff"
+gtf="$refDir"/"GCF_000003055.6_Bos_taurus_UMD_3.1.1_genomic.gtf"
 
 cd "$refDir"
+
+gffread "$gff" -T -o "$gtf"
 
 STAR \
   --runThreadN 24 \
@@ -19,7 +22,6 @@ STAR \
   --sjdbGTFfile "$gtf" \
   --sjdbOverhang 151 \
   --sjdbGTFfeatureExon exon \
-  --genomeSAindexNbases 10 \
   --limitGenomeGenerateRAM 3000000000000
 ```
 
@@ -55,7 +57,7 @@ cd $bbstatsDir
 chmod -R g+w *
 ```
 
-Approximately ?% of the reads aligned to the ribosomal sequences and were removed.
+The remaining non-ribosomal reads were then filtered and trimmed.
 
 ```
 module load mamba/latest
@@ -99,41 +101,7 @@ cd ../
 chmod -R g+w *
 ```
 
-Because this is mammalian data, I'm going to align first with the default STAR parameters (the standard recommendations from the tool's developer).
-
-```
-sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
-  -f /data/gencore/analysis_projects/8424037_Molehin/bbstats/nonribo/cut-paired-filter0415 \
-  -i /scratch/kawoodbu/8424037_Molehin_nonribo_default \
-  -p /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/supplemental_files/star-params-default.txt \
-  -r /data/gencore/databases/reference_genomes/ecoli/JH2013_GCF_004010595.1_ASM401059v1 \
-  -a /data/gencore/analysis_projects/8424037_Molehin/bos-alignment-default-nonribo-cut \
-  -q /data/gencore/analysis_projects/8424037_Molehin/bos-quants-default-nonribo-cut \
-  -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
-```
-
-Unfortunately this aligned at almost 0%. I contacted the researcher who let me know to use the UMD3.1 bovine genome instead, so I constructed STAR indexes for that reference as well and retried the alignment. At least the ribosomal removal and trimming are still good!
-
-```
-refDir="/data/gencore/databases/reference_genomes/bovine/bos-taurus-UMD3.1"
-fasta="$refDir"/"GCF_000003055.6_Bos_taurus_UMD_3.1.1_genomic.fna"
-gff="$refDir"/"GCF_000003055.6_Bos_taurus_UMD_3.1.1_genomic.gff"
-gtf="$refDir"/"GCF_000003055.6_Bos_taurus_UMD_3.1.1_genomic.gtf"
-
-cd "$refDir"
-
-gffread "$gff" -T -o "$gtf"
-
-STAR \
-  --runThreadN 24 \
-  --runMode genomeGenerate \
-  --genomeDir ./ \
-  --genomeFastaFiles "$fasta" \
-  --sjdbGTFfile "$gtf" \
-  --sjdbOverhang 151 \
-  --sjdbGTFfeatureExon exon \
-  --limitGenomeGenerateRAM 3000000000000
-```
+Because this is mammalian data, I used the default recommended STAR parameters for alignment.
 
 ```
 sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A/A.alignment-wrapper.sh \
@@ -146,7 +114,7 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
   -s /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/RNA-DEG_Modules_2025/Module_A
 ```
 
-This worked quite well! Because Deborah has two different aims for this experiment, I'm going to separate out the samples to quant and run differential analysis on, so the modeling formula isn't adjusted by samples from the other aim.
+This worked quite well! Because of the two different aims for this experiment, I separated out the samples to quantify and run differential analysis on, so the modeling formula will only take into consideration samples from the appropriate portion of the experiment.
 
 ```
 # aim 1
@@ -198,7 +166,7 @@ sbatch /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
   -s "deseq2 edger noiseq"
 ```
 
-The next step is to merge the results into a summary output of the three tools, and create some Venn diagrams to visualize the overlap in DEG calls - basically the following command run for both comparison groups and with cutoffs of both 0 and 1.
+The next step is to merge the results into a summary output of the three tools, and create some Venn diagrams to visualize the overlap in DEG calls - basically the following command run for both comparison groups. I chose to run merging without a log2 fold change cutoff, but the csv files can be manually filtered if only genes with a higher log2 fold change in expression are of interest.
 
 ```
 source activate /data/biocore/programs/mamba-envs/biocore-rna
@@ -208,9 +176,9 @@ python /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scri
 
 ## Module C: Functional Enrichment
 
-For this project, I am using Panther to identify functional terms that are over-represented in the lists of DEGs from each comparison.
+For this project, I am using PANTHER to identify functional terms that are over-represented in the lists of DEGs from each comparison, since a gene ontology file is not available for the reference genome, and since *Bos taurus* is available in the PANTHER database.
 
-To make the input files for Panther (these are for AIM2 but I did the same type of command for AIM1):
+To make the input files for PANTHER (these are for AIM2 but I did the same type of command for the comparisons in AIM1) I used the following code:
 
 ```
 awk -F "[|,]" -v OFS='\t' '{ print $2 }' merged_deg.Calf_vs_Cow.up.0.0.stats.csv > calf_vs_cow_up0_pantherInput.txt
@@ -220,3 +188,5 @@ awk -F "[|,]" -v OFS='\t' '{ print $2 }' merged_deg.Crypto_vs_UN.down.0.0.stats.
 awk -F "[|,]" -v OFS='\t' '{ print $2 }' merged_deg.C_vs_B.up.0.0.stats.csv > c_vs_b_up0_pantherInput.txt
 awk -F "[|,]" -v OFS='\t' '{ print $2 }' merged_deg.C_vs_B.down.0.0.stats.csv > c_vs_b_down0_pantherInput.txt
 ```
+
+I used the functional overrepresentation test in PANTHER (version 19.0, analysis release 20240807) with Fisher's exact test and the Bonferroni correction for multiple testing. The resulting functional term lists were visualized with dot plots in R. The gene ontology (GO) database used was the version released 2025-03-16.
