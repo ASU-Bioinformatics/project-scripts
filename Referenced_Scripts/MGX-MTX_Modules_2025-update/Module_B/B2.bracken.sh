@@ -10,6 +10,7 @@
 #SBATCH --mem=4G
 
 levels="S G F O C P K D"
+dbDir="/data/gencore/databases/kraken/k2_pluspf"
 
 VALID_ARGS=$(getopt -o i:o:d: \
                     --long inputDir:,outDir:,dbDir: \
@@ -22,7 +23,7 @@ eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
     -i | --inputDir)
-        echo "Fastq files will be taken from the directory '$2'"
+        echo "Kraken reports will be taken from the directory '$2'"
         inputDir="$2"
         shift 2
         ;;
@@ -36,7 +37,7 @@ while [ : ]; do
         use="$2"
         shift 2
         ;;
-    -t | --levels)
+    -l | --levels)
         echo "Bracken abundance will be calculated for levels '$2'"
         levels="$2"
         shift 2
@@ -51,7 +52,26 @@ while [ : ]; do
   esac
 done
 
-dbDir="/data/gencore/databases/kraken/k2_pluspf"
+if [ "$help" == "TRUE" ]; then
+  cat << EOF
+  This script uses Bracken to model and reformat the Kraken output to make it possible to consider diversity and abundance metrics
+  with statistical meaning.
+
+  usage: sbatch B1.kraken.sh
+            --inputDir /path/to/kraken-reports
+            --outDir /path/to/kraken-output
+            --dbDir /path/to/kraken-db
+            --levels "S G F O C P K D" (-h)
+
+  options:
+    [ -i  |   --inputDir  |   directory containing the kraken report files (as output by B1.kraken.sh, file name ending in .k2report)  ]
+    [ -o  |   --outDir    |   directory for bracken output folders (raw output and reports)                                            ]
+    [ -d  |   --dbDir     |   directory containing the Kraken database of choice; default is /data/gencore/databases/kraken/k2_pluspf/ ]
+    [ -l  |   --levels    |   list of letters specifying taxonomic levels to analyze; default is "S G F O C P K D" (all levels)        ]
+    [ -h  |   --help      |   prints an informational message and exits script                                                         ]
+EOF
+  exit;
+fi
 
 brkDir="$outDir/bracken-raws"
 brpDir="$outDir/bracken-reports"

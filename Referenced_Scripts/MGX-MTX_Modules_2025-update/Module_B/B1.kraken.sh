@@ -4,7 +4,7 @@
 #SBATCH -e slurm.%j.B1.err               # STDERR (%j = JobId)
 
 ### for sol ###
-#SBATCH -p general
+#SBATCH -p public
 #SBATCH -q public
 #SBATCH -t 1-00:00:00                 # took <1hr for a single sample, >50M usable reads and plusPF database
 #SBATCH --mem=120G
@@ -45,6 +45,26 @@ while [ : ]; do
         ;;
   esac
 done
+
+if [ "$help" == "TRUE" ]; then
+  cat << EOF
+  This script removes adapter sequences and filters for quality in 18S, 16S, and ITS reads. Honestly, it could be used
+  for a variety of read types beyond that. The cutadapt parameters can't be customized at this time, and are -m 30 -q 20
+
+  usage: sbatch B1.kraken.sh
+            --inputDir /path/to/fastq-input
+            -outDir /path/to/kraken-output
+            -dbDir /path/to/kraken-db (-h)
+
+  options:
+    [ -i  |   --inputDir  |   directory containing fastq.gz files with traditional Illumina/Casava naming conventions                  ]
+    [ -o  |   --outDir    |   directory for kraken output folders (raw output, reports, classified fastq, and unclassified fastq)      ]
+    [ -d  |   --dbDir     |   directory containing the Kraken database of choice; default is /data/gencore/databases/kraken/k2_pluspf/ ]
+    [ -h  |   --help      |   prints an informational message and exits script                                                         ]
+EOF
+  exit;
+fi
+
 
 rawDir="$outDir"/kraken-raws
 reportDir="$outDir"/kraken-reports
