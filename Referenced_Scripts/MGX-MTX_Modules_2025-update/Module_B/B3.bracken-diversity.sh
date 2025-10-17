@@ -4,7 +4,7 @@
 #SBATCH -e slurm.%j.err               # STDERR (%j = JobId)
 
 ### for sol ###
-#SBATCH -p general
+#SBATCH -p public
 #SBATCH -q public
 #SBATCH -t 0-01:00:00
 #SBATCH --mem=16G
@@ -42,6 +42,23 @@ while [ : ]; do
         ;;
   esac
 done
+
+if [ "$help" == "TRUE" ]; then
+  cat << EOF
+  This script uses the alpha-diversity python script from KrakenTools 1.2 to analyze all Bracken reports contained in the input directory.
+
+  usage: sbatch B3.bracken-diversity.sh
+            --inputDir /path/to/bracken-reports
+            --outDir /path/to/bracken/diversity-output
+            (-h)
+
+  options:
+    [ -i  |   --inputDir  |   directory containing the kraken report files (as output by B1.kraken.sh, file name ending in .k2report)  ]
+    [ -o  |   --outDir    |   directory for bracken output folders (raw output and reports)                                            ]
+    [ -h  |   --help      |   prints an informational message and exits script                                                         ]
+EOF
+  exit;
+fi
 
 mkdir -p "$outDir"
 

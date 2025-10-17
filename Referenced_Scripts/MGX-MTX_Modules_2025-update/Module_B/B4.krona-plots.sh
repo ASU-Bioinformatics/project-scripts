@@ -4,7 +4,7 @@
 #SBATCH -e slurm.%j.B4.err               # STDERR (%j = JobId)
 
 ### for sol ###
-#SBATCH -p general
+#SBATCH -p htc
 #SBATCH -q public
 #SBATCH -t 0-01:00:00
 #SBATCH --mem=16G
@@ -56,6 +56,28 @@ while [ : ]; do
         ;;
   esac
 done
+
+if [ "$help" == "TRUE" ]; then
+  cat << EOF
+  This script uses the Bracken species-level report files to visualize taxonomic population composition in interactive HTML files.
+
+  usage: sbatch B4.krona-plots.sh
+            --inputDir /path/to/bracken-reports
+            --outDir /path/to/tabular-output
+            --krakenBin /path/to/krakenTools/installation
+            --kronaBin /path/to/kronaTools/installation
+            (--help)
+
+  options:
+    [ -i  |   --inputDir  |   directory containing the Bracken report files (file name ending in S.breport)  ]
+    [ -o  |   --outDir    |   output directory for Krona tabular files                                            ]
+    [ -h  |   --htmlDir   |   output directory for Krona HTML files ]
+    [ -k  |   --krakenBin |   directory for KrakenTools installation; default is /data/biocore/programs/KrakenTools-1.2       ]
+    [ -n  |   --kronaBin  |   directory for KronaTools installation; default is /data/biocore/programs/KronaTools-2.8.1/bin ]
+    [ -h  |   --help      |   prints an informational message and exits script                                                         ]
+EOF
+  exit;
+fi
 
 mkdir -p "$outDir"
 mkdir -p "$htmlDir"
