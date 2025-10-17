@@ -1,15 +1,16 @@
 #!/bin/bash
 
-#SBATCH -p general
-####SBATCH -q public              # sol QOS
-#SBATCH -q grp_kawoodbu           # phx QOS
+#SBATCH -p public                    # sol partition
+####SBATCH -p general                # phx partition
+#SBATCH -q public                    # sol QOS
+####SBATCH -q grp_kawoodbu           # phx QOS
 #SBATCH -o slurm.%A.cut-trim.out
 #SBATCH -e slurm.%A.cut-trim.err
 #SBATCH -t 2-0:00
 #SBATCH --mem=64G
 
 # this is the script is used for removing adapters and trimming for quality
-# the sbatch parameters are set for phx by default; if running on Sol change sbatch QOS and trimmomatic module
+# the sbatch parameters are set for Sol by default; if running on phx change sbatch QOS and trimmomatic module
 
 #the script is designed to take any input fastq.gz files where the sample ID does not contain and underscore and is separated from the remainder of
 # the file name by an underscore, as long as a R1 or R2 can be found in between the sample ID and extension.
@@ -103,7 +104,7 @@ if [ "$help" == "TRUE" ]; then
             -e /path/to/conda/environment (-h)
 
   options:
-    [ -i  |   --inputDir     |   directory containing fastq.gz files, where the sample ID is the first field before and underscore  ]
+    [ -i  |   --inputDir     |   directory containing fastq.gz files, where the sample ID is the first field before an underscore  ]
                                    and the read designation (R1 or R2) is in between the sample ID and extension                    ]
     [ -c  |   --cutadaptDir  |   directory for files output by cutadapt, before trimmomatic quality filtering                       ]
     [ -p  |   --pairedDir    |   directory for filtered paired fastq files output by trimmomatic                                    ]
@@ -137,8 +138,8 @@ mv *SCT_L001_R2_001.fastq.gz $cutadaptDir
 
 cd $cutadaptDir
 
-module load trimmomatic-0.39-fs #phx
-###module load trimmomatic-0.39-gcc-12.1.0 #sol
+###module load trimmomatic-0.39-fs #phx
+module load trimmomatic-0.39-gcc-12.1.0 #sol
 
 for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1)
 do
