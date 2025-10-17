@@ -21,7 +21,7 @@ cutadaptDir="$pwd"/fastq-cutadapt
 pairedDir="$pwd"/fastq-cut-paired
 unpairedDir="$pwd"/fastq-cut-unpaired
 adapters="/data/gencore/databases/trimmomatic/all.fa"
-cropLength=250
+cropLength=300
 minLength=50
 environment="/data/biocore/programs/mamba-envs/cutadapt/"
 
