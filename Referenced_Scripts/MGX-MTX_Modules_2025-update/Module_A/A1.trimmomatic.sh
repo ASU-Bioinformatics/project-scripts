@@ -125,7 +125,7 @@ source activate /data/biocore/programs/mamba-envs/cutadapt/
 mkdir -p $cutadaptDir
 cd $inputDir
 
-for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1)
+for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1 | sort | unique)
 do
   ( echo "$i"
   cutadapt -a file:"$adapters" -g file:"$adapters" \
@@ -144,7 +144,7 @@ cd $cutadaptDir
 ###module load trimmomatic-0.39-fs #phx
 module load trimmomatic-0.39-gcc-12.1.0 #sol
 
-for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1)
+for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1 | sort | unique)
 do
   ( echo "$i"
   trimmomatic PE "$i"_SCT_L001_R1_001.fastq.gz "$i"_SCT_L001_R2_001.fastq.gz \
