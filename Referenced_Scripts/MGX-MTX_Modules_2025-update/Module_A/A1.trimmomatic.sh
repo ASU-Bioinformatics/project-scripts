@@ -8,6 +8,7 @@
 #SBATCH -e slurm.%A.cut-trim.err
 #SBATCH -t 2-0:00
 #SBATCH --mem=64G
+#SBATCH -c 4
 
 # this is the script is used for removing adapters and trimming for quality
 # the sbatch parameters are set for Sol by default; if running on phx change sbatch QOS and trimmomatic module
@@ -126,13 +127,15 @@ cd $inputDir
 
 for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1)
 do
+  ( echo "$i"
   cutadapt -a file:"$adapters" -g file:"$adapters" \
-         -A file:"$adapters" -G file:"$adapters" \
-         -m 30 -q 20 \
+         -m 30 -q 15 --cores=4 \
          -o "$i"_SCT_L001_R1_001.fastq.gz \
          -p "$i"_SCT_L001_R2_001.fastq.gz \
          "$i"_S*R1*.fastq.gz "$i"_S*R2*.fastq.gz
-done
+       ) &
+done;
+wait
 
 mv *SCT_L001_R2_001.fastq.gz $cutadaptDir
 
@@ -143,11 +146,14 @@ module load trimmomatic-0.39-gcc-12.1.0 #sol
 
 for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1)
 do
+  ( echo "$i"
   trimmomatic PE "$i"_SCT_L001_R1_001.fastq.gz "$i"_SCT_L001_R2_001.fastq.gz \
             "$i"_SQP_L001_R1_001.fastq.gz "$i"_SUN_L001_R1_001.fastq.gz \
             "$i"_SQP_L001_R2_001.fastq.gz "$i"_SUN_L001_R2_001.fastq.gz \
             CROP:$cropLength SLIDINGWINDOW:4:15 MINLEN:$minLength
+          ) &
 done
+wait
 
 mkdir -p $pairedDir
 mkdir -p $unpairedDir
