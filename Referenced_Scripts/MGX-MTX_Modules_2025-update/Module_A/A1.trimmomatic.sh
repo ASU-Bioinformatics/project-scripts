@@ -29,8 +29,8 @@ environment="/data/biocore/programs/mamba-envs/cutadapt/"
 cut=TRUE
 trim=TRUE
 
-VALID_ARGS=$(getopt -o i:c:p:u:a:t:m:l:e:h \
-                    --long inputDir:,cutadaptDir:,pairedDir:,unpairedDir:,adapters:,trimParams:,cutParams:,cutLen:,environment:,noTrimmomatic,noCutadapt,help \
+VALID_ARGS=$(getopt -o i:c:p:u:a:x:m:e:h \
+                    --long inputDir:,cutadaptDir:,pairedDir:,unpairedDir:,adapters:,maxLength:,minLength:,environment:,noTrimmomatic,noCutadapt,help \
                     -- "$@")
 if [[ $? -ne 0 ]]; then
   exit 1;
@@ -116,16 +116,18 @@ if [ "$help" == "TRUE" ]; then
             -e /path/to/conda/environment (-h)
 
   options:
-    [ -i  |   --inputDir     |   directory containing fastq.gz files, where the sample ID is the first field before an underscore   ]
-                                   and the read designation (R1 or R2) is in between the sample ID and extension                    ]
-    [ -c  |   --cutadaptDir  |   directory for files output by cutadapt, before trimmomatic quality filtering                       ]
-    [ -p  |   --pairedDir    |   directory for filtered paired fastq files output by trimmomatic                                    ]
-    [ -u  |   --unpairedDir  |   directory for filtered unpaired fastq files output by trimmomatic                                  ]
-    [ -a  |   --adapters     |   the file containing fastq sequences for adapters to search for and trim                            ]
-    [ -x  |   --maxLength    |   the maximum length to crop reads during Trimmomatic filtering (default 300bp)                      ]
-    [ -m  |   --minLength    |   the minimum read length to retain during Trimmomatic filtering (default 50bp)                      ]
-    [ -e  |   --environment  |   location for the cutadapt environment; default is "/data/biocore/programs/mamba-envs/cutadapt/"    ]
-    [ -h  |   --help         |   prints an informational message and exits script                                                   ]
+    [ -i  |   --inputDir      |   directory containing fastq.gz files, where the sample ID is the first field before an underscore   ]
+                                   and the read designation (R1 or R2) is in between the sample ID and extension                     ]
+    [ -c  |   --cutadaptDir   |   directory for files output by cutadapt, before trimmomatic quality filtering                       ]
+    [ -p  |   --pairedDir     |   directory for filtered paired fastq files output by trimmomatic                                    ]
+    [ -u  |   --unpairedDir   |   directory for filtered unpaired fastq files output by trimmomatic                                  ]
+    [ -a  |   --adapters      |   the file containing fastq sequences for adapters to search for and trim                            ]
+    [ -x  |   --maxLength     |   the maximum length to crop reads during Trimmomatic filtering (default 300bp)                      ]
+    [ -m  |   --minLength     |   the minimum read length to retain during Trimmomatic filtering (default 50bp)                      ]
+    [ -e  |   --environment   |   location for the cutadapt environment; default is "/data/biocore/programs/mamba-envs/cutadapt/"    ]
+    [     |   --noTrimmomatic |   if set, does not run the trimmomatic portion of the script                                         ]
+    [     |   --noCutadapt    |   if set, does not run the cutadapt portion of the script                                            ]
+    [ -h  |   --help          |   prints an informational message and exits script                                                   ]
 EOF
   exit;
 fi

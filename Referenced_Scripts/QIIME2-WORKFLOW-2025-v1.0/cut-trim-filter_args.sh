@@ -24,9 +24,11 @@ adapters="/data/gencore/databases/trimmomatic/all.fa"
 cropLength=250
 minLength=50
 environment="/data/biocore/programs/mamba-envs/cutadapt/"
+cut=TRUE
+trim=TRUE
 
-VALID_ARGS=$(getopt -o i:c:p:u:a:t:m:l:e:h \
-                    --long inputDir:,cutadaptDir:,pairedDir:,unpairedDir:,adapters:,trimParams:,cutParams:,cutLen:,environment:,help \
+VALID_ARGS=$(getopt -o i:c:p:u:a:x:m:e:h \
+                    --long inputDir:,cutadaptDir:,pairedDir:,unpairedDir:,adapters:,maxLength:,minLength:,environment:,noTrimmomatic,noCutadapt,help \
                     -- "$@")
 if [[ $? -ne 0 ]]; then
   exit 1;
@@ -59,20 +61,29 @@ while [ : ]; do
         echo "The fastq file of adapters to trim is '$2'"
         shift 2
         ;;
-    -t | --trimParams)
-        trimParams="$2"
-        echo "The trimmomatic parameters are '$2'"
+    -x | --maxLength)
+        cropLength="$2"
+        echo "Reads will be trimmed to a length of '$2' base pairs before filtering with Trimmomatic"
         shift 2
         ;;
-    -m | --cutParams)
-        cutParams="$2"
-        echo "The cutadapt parameters are '$2'"
+    -m | --minLength)
+        minLength="$2"
+        echo "Reads less than '$2' base pairs after Trimmomatic processing will be discarded"
         shift 2
         ;;
     -e | --environment)
         echo "The conda environment to use is '$2'"
         environment="$2"
         shift 2
+        ;;
+    --noTrimmomatic)
+        trim=FALSE
+        shift
+        ;;
+    --noCutadapt)
+        cut=FALSE
+        cutadaptDir=$inputDir
+        shift
         ;;
     -h | --help)
         help="TRUE"
@@ -99,57 +110,74 @@ if [ "$help" == "TRUE" ]; then
             -p /path/to/paired-trimmomatic-output
             -u /path/to/unpaired-trimmomatic-output
             -a /path/to/adapters.fa
-            -t "trimmomatic parameters"
+            -x 300 -m 50 (--noTrimmomatic) (--noCutadapt)
             -e /path/to/conda/environment (-h)
 
   options:
-    [ -i  |   --inputDir     |   directory containing fastq.gz files, where the sample ID is the first field before and underscore  ]
-                                   and the read designation (R1 or R2) is in between the sample ID and extension                    ]
-    [ -c  |   --cutadaptDir  |   directory for files output by cutadapt, before trimmomatic quality filtering                       ]
-    [ -p  |   --pairedDir    |   directory for filtered paired fastq files output by trimmomatic                                    ]
-    [ -u  |   --unpairedDir  |   directory for filtered unpaired fastq files output by trimmomatic                                  ]
-    [ -a  |   --adapters     |   the file containing fastq sequences for adapters to search for and trim                            ]
-    [ -l  |   --cropLength   |   the maximum length to crop reads during Trimmomatic filtering                                      ]
-    [ -l  |   --cropLength   |   the minimum read length to retain during Trimmomatic filtering                                     ]
-    [ -e  |   --environment  |   location for the cutadapt environment; default is "/data/biocore/programs/mamba-envs/cutadapt/"    ]
-    [ -h  |   --help         |   prints an informational message and exits script                                                   ]
+    [ -i  |   --inputDir      |   directory containing fastq.gz files, where the sample ID is the first field before an underscore   ]
+                                   and the read designation (R1 or R2) is in between the sample ID and extension                     ]
+    [ -c  |   --cutadaptDir   |   directory for files output by cutadapt, before trimmomatic quality filtering                       ]
+    [ -p  |   --pairedDir     |   directory for filtered paired fastq files output by trimmomatic                                    ]
+    [ -u  |   --unpairedDir   |   directory for filtered unpaired fastq files output by trimmomatic                                  ]
+    [ -a  |   --adapters      |   the file containing fastq sequences for adapters to search for and trim                            ]
+    [ -x  |   --maxLength     |   the maximum length to crop reads during Trimmomatic filtering (default 300bp)                      ]
+    [ -m  |   --minLength     |   the minimum read length to retain during Trimmomatic filtering (default 50bp)                      ]
+    [ -e  |   --environment   |   location for the cutadapt environment; default is "/data/biocore/programs/mamba-envs/cutadapt/"    ]
+    [     |   --noTrimmomatic |   if set, does not run the trimmomatic portion of the script                                         ]
+    [     |   --noCutadapt    |   if set, does not run the cutadapt portion of the script                                            ]
+    [ -h  |   --help          |   prints an informational message and exits script                                                   ]
 EOF
   exit;
 fi
 
 module load mamba/latest
+
+if [[ "$cut" == "TRUE" ]]
+then
 source activate /data/biocore/programs/mamba-envs/cutadapt/
 
 mkdir -p $cutadaptDir
 cd $inputDir
 
-for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1)
+for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1 | sort | uniq )
 do
-  cutadapt -a file:"$adapters" -g file:"$adapters" \
-         -A file:"$adapters" -G file:"$adapters" \
-         -m 30 -q 20 \
+  ( echo "$i"
+  cutadapt -a file:"$adapters" -A file:"$adapters" \
+         -m 30 -q 15 --cores=4 \
          -o "$i"_SCT_L001_R1_001.fastq.gz \
          -p "$i"_SCT_L001_R2_001.fastq.gz \
          "$i"_S*R1*.fastq.gz "$i"_S*R2*.fastq.gz
-done
+       ) &
+done;
+wait
 
+mv *SCT_L001_R1_001.fastq.gz $cutadaptDir
 mv *SCT_L001_R2_001.fastq.gz $cutadaptDir
+
+fi
 
 cd $cutadaptDir
 
-module load trimmomatic-0.39-fs #phx
-###module load trimmomatic-0.39-gcc-12.1.0 #sol
+if [[ "$trim" == "TRUE" ]];
+then
 
-for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1)
+module load trimmomatic-0.39-fs #phx
+##module load trimmomatic-0.39-gcc-12.1.0 #sol
+
+for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | cut -d "_" -f 1 | sort | uniq )
 do
+  ( echo "$i"
   trimmomatic PE "$i"_SCT_L001_R1_001.fastq.gz "$i"_SCT_L001_R2_001.fastq.gz \
             "$i"_SQP_L001_R1_001.fastq.gz "$i"_SUN_L001_R1_001.fastq.gz \
             "$i"_SQP_L001_R2_001.fastq.gz "$i"_SUN_L001_R2_001.fastq.gz \
             CROP:$cropLength SLIDINGWINDOW:4:15 MINLEN:$minLength
+          ) &
 done
+wait
 
 mkdir -p $pairedDir
 mkdir -p $unpairedDir
 
 mv *SQP* $pairedDir
 mv *SUN* $unpairedDir
+fi
