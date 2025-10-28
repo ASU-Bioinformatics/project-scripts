@@ -143,7 +143,7 @@ for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; do
 do
   ( echo "$i"
   cutadapt -a file:"$adapters" -A file:"$adapters" \
-         -m 30 -q 15 --cores=4 \
+         -m 30 -q 15 --cores=1 \
          -o "$i"_SCT_L001_R1_001.fastq.gz \
          -p "$i"_SCT_L001_R2_001.fastq.gz \
          "$i"_S*R1*.fastq.gz "$i"_S*R2*.fastq.gz
