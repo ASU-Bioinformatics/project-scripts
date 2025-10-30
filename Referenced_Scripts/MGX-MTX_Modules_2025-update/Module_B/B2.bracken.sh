@@ -73,6 +73,8 @@ EOF
   exit;
 fi
 
+module load mamba/latest
+
 brkDir="$outDir/bracken-raws"
 brpDir="$outDir/bracken-reports"
 
