@@ -103,7 +103,7 @@ then
   do
     echo "$i"
     sbatch --job-name "$i".C1.humann-metaphlan \
-         /data/gencore/shared_scripts/metagenome_rd/standalone_pathway/Module_C/C1.humann-metaphlan.sh \
+         /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/MGX-MTX_Modules_2025-update/Module_C/C1.humann-metaphlan.sh \
          "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$database"
   done;
 
@@ -116,7 +116,7 @@ then
   do
     echo "$i"
     sbatch --job-name "$i".C1.humann-metaphlan \
-         /data/gencore/shared_scripts/metagenome_rd/standalone_pathway/Module_C/C1.humann-metaphlan.sh \
+         /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/MGX-MTX_Modules_2025-update/Module_C/C1.humann-metaphlan.sh \
          "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$database"
   done;
 
