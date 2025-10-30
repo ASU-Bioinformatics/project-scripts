@@ -79,6 +79,8 @@ EOF
   exit;
 fi
 
+module load mamba/latest
+
 mkdir -p "$outDir"
 mkdir -p "$htmlDir"
 
