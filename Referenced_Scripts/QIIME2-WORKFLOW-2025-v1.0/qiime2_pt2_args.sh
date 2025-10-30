@@ -2,7 +2,7 @@
 
 ##### qiime2 pt2: taxonomy and phylogeny #####
 
-#SBATCH -p general
+#SBATCH -p public
 #SBATCH -q public
 #SBATCH -o slurm.%j.out                   # STDOUT (%j = JobId)
 #SBATCH -e slurm.%j.err                   # STDERR (%j = JobId)
@@ -146,7 +146,7 @@ source activate /data/biocore/programs/mamba-envs/qiime2-amplicon-2025.7/
 cd "$qiimeDir"
 
 # Taxonomic analysis with selected classifier
-echo $classifier 
+echo $classifier
 qiime feature-classifier classify-sklearn \
   --i-classifier $classifier \
   --i-reads rep-seqs-"$inputStrand"-"$dada2".qza \
