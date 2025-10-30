@@ -13,7 +13,7 @@
 
 sid="$1"
 
-echo "humann run for $sid, set for 5 days, 8 cores, 124G memory"
+echo "humann run for $sid, set for 3.5 days, 6 cores, 84G memory"
 
 module load mamba/latest
 source activate /data/biocore/programs/conda-envs/humann-env/
