@@ -2,7 +2,7 @@
 
 ##### qiime2 pt1: dada2 #####
 
-#SBATCH -p general
+#SBATCH -p public
 #SBATCH -q public
 #SBATCH -o slurm.%j.out                   # STDOUT (%j = JobId)
 #SBATCH -e slurm.%j.err                   # STDERR (%j = JobId)
@@ -228,6 +228,7 @@ then
       --i-demultiplexed-seqs "$qiimeDir"/demux-"$inputPairing".qza \
       --p-trim-left 0 \
       --p-trunc-len $cutLen \
+      --p-n-threads 0 \
       --o-representative-sequences "$qiimeDir"/rep-seqs-"$inputPairing"-"$dada2".qza \
       --o-table "$qiimeDir"/table-"$inputPairing"-"$dada2".qza \
       --o-denoising-stats "$qiimeDir"/stats-dada2-"$inputPairing"-"$dada2".qza
@@ -236,6 +237,7 @@ then
       --i-demultiplexed-seqs "$qiimeDir"/demux-"$inputPairing".qza \
       --p-trunc-len-f $cutLen \
       --p-trunc-len-r $cutLen \
+      --p-n-threads 0 \
       --o-representative-sequences "$qiimeDir"/rep-seqs-"$inputPairing"-"$dada2".qza \
       --o-table "$qiimeDir"/table-"$inputPairing"-"$dada2".qza \
       --o-denoising-stats "$qiimeDir"/stats-dada2-"$inputPairing"-"$dada2".qza

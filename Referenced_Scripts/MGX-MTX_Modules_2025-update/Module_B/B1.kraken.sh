@@ -81,7 +81,6 @@ cd "$inputDir"
 
 for sid in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; done | rev | cut -d "_" -f 5-10 | rev | sort | uniq)
 do
-  echo "$sid"
   /data/biocore/programs/kraken2/kraken2 --db "$dbDir" --threads 8 \
                   --report "$reportDir"/"$sid"_SQP_k2pf_pe.k2report \
                   --report-minimizer-data --minimum-hit-groups 3 --paired \
@@ -90,3 +89,5 @@ do
                   "$inputDir"/"$sid"_SQP_L00*_R1_001.fastq.gz \
                   "$inputDir"/"$sid"_SQP_L00*_R2_001.fastq.gz > "$rawDir"/"$sid"_SQP_k2pf_pe.kraken2
 done;
+
+echo "script complete"

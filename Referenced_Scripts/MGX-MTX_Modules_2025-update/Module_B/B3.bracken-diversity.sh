@@ -4,7 +4,7 @@
 #SBATCH -e slurm.%j.err               # STDERR (%j = JobId)
 
 ### for sol ###
-#SBATCH -p public
+#SBATCH -p htc
 #SBATCH -q public
 #SBATCH -t 0-01:00:00
 #SBATCH --mem=16G
