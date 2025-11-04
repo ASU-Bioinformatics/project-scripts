@@ -31,9 +31,10 @@ concatenate="TRUE"
 type="DNA"
 refDir=""
 use="DIRECTORY"
+resume="FALSE"
 
-VALID_ARGS=$(getopt -o i:cpo:r:d:l: \
-                    --long inputDir:,concat,paired,outDir:,dnaRef:,dbType:,use:,list: \
+VALID_ARGS=$(getopt -o i:cpo:r:d:ml: \
+                    --long inputDir:,concatenated,paired,outDir:,dnaRef:,dbType:,resume,list: \
                     -- "$@")
 if [[ $? -ne 0 ]]; then
   exit 1;
@@ -47,7 +48,7 @@ while [ : ]; do
         inputDir="$2"
         shift 2
         ;;
-    -c | --concat)
+    -c | --concatenated)
         echo "Fastq files are already concatenated"
         concatenate="FALSE"
         shift
@@ -72,6 +73,11 @@ while [ : ]; do
         database="$2"
         shift 2
         ;;
+    -m | --resume)
+        echo "Will begin Humann/Metaphlan from a previous unfinished run"
+        resume="TRUE"
+        shift
+        ;;
     -l | --list)
         echo "Samples from the list '$2' will be classified"
         list="$2"
@@ -88,6 +94,17 @@ while [ : ]; do
   esac
 done
 
+module load mamba/latest
+source activate /data/biocore/programs/conda-envs/humann-env/
+
+if [[ "$database" == "u50" ]]; then
+  humann_config --update database_folders protein /data/gencore/databases/humann/uniref/uniref
+  mode="uniref50"
+elif [[ "$database" == "u90" ]]; then
+  humann_config --update database_folders protein /data/gencore/databases/humann/uniref90/
+  mode="uniref90"
+fi
+
 if [ "$use" == "DIRECTORY" ];
 then
 
@@ -98,13 +115,12 @@ then
     gzip "$sid"
   done
 
-
   for i in $(find "$inputDir" -type f -name "*.fastq.gz" | while read F; do basename $F; done | rev | cut -d "_" -f 5-10 | rev | sort | uniq)
   do
     echo "$i"
     sbatch --job-name "$i".C1.humann-metaphlan \
          /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/MGX-MTX_Modules_2025-update/Module_C/C1.humann-metaphlan.sh \
-         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$database"
+         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$resume"
   done;
 
 elif [ "$use" == "LIST" ];
@@ -117,7 +133,7 @@ then
     echo "$i"
     sbatch --job-name "$i".C1.humann-metaphlan \
          /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/MGX-MTX_Modules_2025-update/Module_C/C1.humann-metaphlan.sh \
-         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$database"
+         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$resume"
   done;
 
 fi

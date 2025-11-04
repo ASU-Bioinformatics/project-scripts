@@ -9,7 +9,7 @@
 #SBATCH -e slurm.%j.%x.err
 #SBATCH -t 3-12:00
 #SBATCH -c 6
-#SBATCH --mem=84G
+#SBATCH --mem=256G
 
 sid="$1"
 
@@ -23,7 +23,7 @@ outDir="$3"
 fqDir="$4"
 concatenate="$5"
 type="$6"
-database="$7"
+resume="$7"
 
 if [[ "$concatenate" == "TRUE" ]]; then
   echo "concatenating fastq files"
@@ -35,25 +35,36 @@ fi
 
 fastq="$fqDir"/"$sid"_SQP_L001_RC_001.fastq.gz
 
-if [[ "$database" == "u50" ]]; then
-  humann_config --update database_folders protein /data/gencore/databases/humann/uniref/uniref
-  mode="uniref50"
-elif [[ "$database" == "u90" ]]; then
-  humann_config --update database_folders protein /data/gencore/databases/humann/uniref90/
-  mode="uniref90"
-fi
 
 if [[ "$type" == "DNA" ]]; then
   echo "running DNA or unpaired RNA mode"
-  humann -i "$fastq" --search-mode "$mode" \
-         -o "$outDir" --output-format tsv \
-         --threads 8 --verbose
+
+  if [[ "$resume" == "TRUE" ]]; then
+    echo "resuming from previous run"
+    humann -i "$fastq" --search-mode "$mode" \
+           -o "$outDir" --output-format tsv \
+           --threads 8 --verbose --resume
+  else
+    humann -i "$fastq" --search-mode "$mode" \
+          -o "$outDir" --output-format tsv \
+          --threads 8 --verbose
+  fi
+
 elif [[ "$type" == "RNA" ]]; then
   echo "running paired RNA mode"
-  humann -i "$fastq" --search-mode "$mode" \
-         -o "$outDir" --output-format tsv \
-         --threads 8 --verbose \
-         --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
+
+  if [[ "$resume" == "TRUE" ]]; then
+    echo "resuming from previous run"
+    humann -i "$fastq" --search-mode "$mode" \
+           -o "$outDir" --output-format tsv \
+           --threads 8 --verbose \
+           --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
+  else
+    humann -i "$fastq" --search-mode "$mode" \
+          -o "$outDir" --output-format tsv \
+          --threads 8 --verbose \
+          --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
+  fi
 fi
 
 
