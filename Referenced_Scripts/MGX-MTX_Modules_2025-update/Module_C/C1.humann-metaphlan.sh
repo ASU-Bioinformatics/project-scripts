@@ -23,7 +23,7 @@ outDir="$3"
 fqDir="$4"
 concatenate="$5"
 type="$6"
-database="$7"
+mode="$7"
 resume="$8"
 
 if [[ "$concatenate" == "TRUE" ]]; then
