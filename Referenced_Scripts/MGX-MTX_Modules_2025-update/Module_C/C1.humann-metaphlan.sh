@@ -23,7 +23,8 @@ outDir="$3"
 fqDir="$4"
 concatenate="$5"
 type="$6"
-resume="$7"
+database="$7"
+resume="$8"
 
 if [[ "$concatenate" == "TRUE" ]]; then
   echo "concatenating fastq files"

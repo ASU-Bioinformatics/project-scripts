@@ -120,7 +120,7 @@ then
     echo "$i"
     sbatch --job-name "$i".C1.humann-metaphlan \
          /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/MGX-MTX_Modules_2025-update/Module_C/C1.humann-metaphlan.sh \
-         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$resume"
+         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$mode" "$resume"
   done;
 
 elif [ "$use" == "LIST" ];
@@ -133,7 +133,7 @@ then
     echo "$i"
     sbatch --job-name "$i".C1.humann-metaphlan \
          /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/MGX-MTX_Modules_2025-update/Module_C/C1.humann-metaphlan.sh \
-         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$resume"
+         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$mode" "$resume"
   done;
 
 fi
