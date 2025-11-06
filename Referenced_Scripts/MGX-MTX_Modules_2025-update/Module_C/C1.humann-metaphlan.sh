@@ -44,11 +44,11 @@ if [[ "$type" == "DNA" ]]; then
     echo "resuming from previous run"
     humann -i "$fastq" --search-mode "$mode" \
            -o "$outDir" --output-format tsv \
-           --threads 8 --verbose --resume
+           --threads 4 --verbose --resume
   else
     humann -i "$fastq" --search-mode "$mode" \
           -o "$outDir" --output-format tsv \
-          --threads 8 --verbose
+          --threads 4 --verbose
   fi
 
 elif [[ "$type" == "RNA" ]]; then
@@ -58,12 +58,12 @@ elif [[ "$type" == "RNA" ]]; then
     echo "resuming from previous run"
     humann -i "$fastq" --search-mode "$mode" \
            -o "$outDir" --output-format tsv \
-           --threads 8 --verbose \
+           --threads 4 --verbose \
            --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
   else
     humann -i "$fastq" --search-mode "$mode" \
           -o "$outDir" --output-format tsv \
-          --threads 8 --verbose \
+          --threads 4 --verbose \
           --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
   fi
 fi
