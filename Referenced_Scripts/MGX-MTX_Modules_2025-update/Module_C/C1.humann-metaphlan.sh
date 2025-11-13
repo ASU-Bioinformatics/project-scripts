@@ -7,8 +7,8 @@
 #SBATCH -q public
 #SBATCH -o slurm.%j.%x.out
 #SBATCH -e slurm.%j.%x.err
-#SBATCH -t 3-12:00
-#SBATCH -c 6
+#SBATCH -t 7-00:00
+#SBATCH -c 3
 #SBATCH --mem=256G
 
 sid="$1"
@@ -44,11 +44,11 @@ if [[ "$type" == "DNA" ]]; then
     echo "resuming from previous run"
     humann -i "$fastq" --search-mode "$mode" \
            -o "$outDir" --output-format tsv \
-           --threads 4 --verbose --resume
+           --threads 8 --verbose --resume
   else
     humann -i "$fastq" --search-mode "$mode" \
           -o "$outDir" --output-format tsv \
-          --threads 4 --verbose
+          --threads 8 --verbose
   fi
 
 elif [[ "$type" == "RNA" ]]; then
@@ -58,12 +58,12 @@ elif [[ "$type" == "RNA" ]]; then
     echo "resuming from previous run"
     humann -i "$fastq" --search-mode "$mode" \
            -o "$outDir" --output-format tsv \
-           --threads 4 --verbose \
+           --threads 8 --verbose \
            --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
   else
     humann -i "$fastq" --search-mode "$mode" \
           -o "$outDir" --output-format tsv \
-          --threads 4 --verbose \
+          --threads 8 --verbose \
           --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
   fi
 fi
