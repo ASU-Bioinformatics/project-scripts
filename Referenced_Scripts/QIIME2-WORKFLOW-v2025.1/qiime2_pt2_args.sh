@@ -212,7 +212,7 @@ then
     --o-visualization core-metrics-results-"$inputStrand"-"$dada2"/evenness-group-significance.qzv
 
 #beta group significance, for each categorical column
-for j in $categories;
+for j in $categoricals;
 do
 
   (echo "$j"
