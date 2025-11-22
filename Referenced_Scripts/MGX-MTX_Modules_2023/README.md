@@ -20,7 +20,7 @@ To analyze a data set containing only MTX reads, you'll need the following scrip
 2. Module C: HUMAnN/MetaPhLAN taxonomic classification and functional analysis
 3. Module D: Coassembly of reads in to contigs
 4. Module F: Annotation of contigs with functional analysis
-6. Module I: Alignment of transcripts to DNA coassembly with abundance profiling
+6. Module I: Alignment of transcripts to coassembly with abundance profiling
 7. Module K: Differential expression analysis between sample groups
 
 ## Paired MGX/MTX Data Modules
@@ -56,6 +56,6 @@ To analyze a data set containing MTX reads enriched for viral sequences, you'll 
 2. Module C: HUMAnN/MetaPhLAN taxonomic classification and functional analysis
 3. Module D: Coassembly of reads into contigs and back alignment of each sample to the coassembly
 4. Module F: Annotation of contigs with functional analysis
-6. Module I: Alignment of transcripts to DNA coassembly with abundance profiling
+6. Module I: Alignment of transcripts to coassembly with abundance profiling
 8. Module K: Differential expression analysis between sample groups
 7. Module E: Identification and classification of viral contigs and raw reads, with comparative diversity analysis
