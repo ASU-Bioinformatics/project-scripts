@@ -8,15 +8,15 @@
 #SBATCH -o slurm.%j.%x.out
 #SBATCH -e slurm.%j.%x.err
 #SBATCH -t 7-00:00
-#SBATCH -c 3
-#SBATCH --mem=256G
+#SBATCH -c 4
+#SBATCH --mem=480G
 
 sid="$1"
 
 echo "humann run for $sid, set for 3.5 days, 6 cores, 84G memory"
 
 module load mamba/latest
-source activate /data/biocore/programs/conda-envs/humann-env/
+source activate /data/biocore/programs/mamba-envs/humann4-env/
 
 refDir="$2"
 outDir="$3"
@@ -42,13 +42,13 @@ if [[ "$type" == "DNA" ]]; then
 
   if [[ "$resume" == "TRUE" ]]; then
     echo "resuming from previous run"
-    humann -i "$fastq" --search-mode "$mode" \
+    humann -i "$fastq" --metaphlan-options="--offline -t rel_ab_w_read_stats" \
            -o "$outDir" --output-format tsv \
-           --threads 8 --verbose --resume
+           --threads 6 --verbose --resume
   else
-    humann -i "$fastq" --search-mode "$mode" \
+    humann -i "$fastq" --metaphlan-options="--offline -t rel_ab_w_read_stats" \
           -o "$outDir" --output-format tsv \
-          --threads 8 --verbose
+          --threads 6 --verbose
   fi
 
 elif [[ "$type" == "RNA" ]]; then
@@ -56,14 +56,14 @@ elif [[ "$type" == "RNA" ]]; then
 
   if [[ "$resume" == "TRUE" ]]; then
     echo "resuming from previous run"
-    humann -i "$fastq" --search-mode "$mode" \
+    humann -i "$fastq" --metaphlan-options="--offline -t rel_ab_w_read_stats" \
            -o "$outDir" --output-format tsv \
-           --threads 8 --verbose \
+           --threads 6 --verbose \
            --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
   else
-    humann -i "$fastq" --search-mode "$mode" \
+    humann -i "$fastq" --metaphlan-options="--offline -t rel_ab_w_read_stats" \
           -o "$outDir" --output-format tsv \
-          --threads 8 --verbose \
+          --threads 6 --verbose \
           --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
   fi
 fi

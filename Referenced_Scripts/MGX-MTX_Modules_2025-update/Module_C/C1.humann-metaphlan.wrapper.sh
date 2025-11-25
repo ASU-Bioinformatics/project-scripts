@@ -33,8 +33,8 @@ refDir=""
 use="DIRECTORY"
 resume="FALSE"
 
-VALID_ARGS=$(getopt -o i:cpo:r:d:ml: \
-                    --long inputDir:,concatenated,paired,outDir:,dnaRef:,dbType:,resume,list: \
+VALID_ARGS=$(getopt -o i:cpo:r:ml: \
+                    --long inputDir:,concatenated,paired,outDir:,dnaRef:,resume,list: \
                     -- "$@")
 if [[ $? -ne 0 ]]; then
   exit 1;
@@ -68,11 +68,6 @@ while [ : ]; do
         refDir="$2"
         shift 2
         ;;
-    -d | --dbType)
-        echo "The HUMAnN database with UniRef set '$2' will be used for classification"
-        database="$2"
-        shift 2
-        ;;
     -m | --resume)
         echo "Will begin Humann/Metaphlan from a previous unfinished run"
         resume="TRUE"
@@ -95,15 +90,7 @@ while [ : ]; do
 done
 
 module load mamba/latest
-source activate /data/biocore/programs/conda-envs/humann-env/
-
-if [[ "$database" == "u50" ]]; then
-  humann_config --update database_folders protein /data/gencore/databases/humann/uniref/uniref
-  mode="uniref50"
-elif [[ "$database" == "u90" ]]; then
-  humann_config --update database_folders protein /data/gencore/databases/humann/uniref90/
-  mode="uniref90"
-fi
+source activate /data/biocore/programs/mamba-envs/humann4-env/
 
 if [ "$use" == "DIRECTORY" ];
 then
