@@ -25,6 +25,7 @@ concatenate="$5"
 type="$6"
 mode="$7"
 resume="$8"
+normType="$9"
 
 if [[ "$concatenate" == "TRUE" ]]; then
   echo "concatenating fastq files"
@@ -44,10 +45,12 @@ if [[ "$type" == "DNA" ]]; then
     echo "resuming from previous run"
     humann -i "$fastq" --metaphlan-options="--offline -t rel_ab_w_read_stats" \
            -o "$outDir" --output-format tsv \
+           --count-normalization "$normType" \
            --threads 6 --verbose --resume
   else
     humann -i "$fastq" --metaphlan-options="--offline -t rel_ab_w_read_stats" \
           -o "$outDir" --output-format tsv \
+          --count-normalization "$normType" \
           --threads 6 --verbose
   fi
 
@@ -58,11 +61,13 @@ elif [[ "$type" == "RNA" ]]; then
     echo "resuming from previous run"
     humann -i "$fastq" --metaphlan-options="--offline -t rel_ab_w_read_stats" \
            -o "$outDir" --output-format tsv \
+           --count-normalization "$normType" \
            --threads 6 --verbose \
            --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
   else
     humann -i "$fastq" --metaphlan-options="--offline -t rel_ab_w_read_stats" \
           -o "$outDir" --output-format tsv \
+          --count-normalization "$normType" \
           --threads 6 --verbose \
           --taxonomic-profile "$refDir"/"$sid"_SQP_L001_RC_001_humann_temp/"$sid"_SQP_L001_RC_001_metaphlan_bugs_list.tsv
   fi

@@ -4,10 +4,10 @@
 #SBATCH -e slurm.%j.B1.err               # STDERR (%j = JobId)
 
 ### for sol ###
-#SBATCH -p public
+#SBATCH -p highmem
 #SBATCH -q public
 #SBATCH -t 2-00:00:00                 # took <1hr for a single sample, >50M usable reads and plusPF database
-#SBATCH --mem=320G
+#SBATCH --mem=1024G
 
 # define project-specific variables
 

@@ -32,9 +32,10 @@ type="DNA"
 refDir=""
 use="DIRECTORY"
 resume="FALSE"
+normType="Adjusted CPMs"
 
-VALID_ARGS=$(getopt -o i:cpo:r:ml: \
-                    --long inputDir:,concatenated,paired,outDir:,dnaRef:,resume,list: \
+VALID_ARGS=$(getopt -o i:cpo:r:n:ml:h \
+                    --long inputDir:,concatenated,paired,outDir:,dnaRef:,normType:,resume,list:,help \
                     -- "$@")
 if [[ $? -ne 0 ]]; then
   exit 1;
@@ -68,6 +69,11 @@ while [ : ]; do
         refDir="$2"
         shift 2
         ;;
+    -n | --normType)
+        echo "Output will be normalized as '$2' values"
+        normType="$2"
+        shift 2
+        ;;
     -m | --resume)
         echo "Will begin Humann/Metaphlan from a previous unfinished run"
         resume="TRUE"
@@ -79,6 +85,10 @@ while [ : ]; do
         use="LIST"
         shift 2
         ;;
+    -h | --help)
+        help="TRUE"
+        shift
+        ;;
     --)
         shift;
         break
@@ -88,6 +98,31 @@ while [ : ]; do
         ;;
   esac
 done
+
+if [ "$help" == "TRUE" ]; then
+  cat << EOF
+  This script handles HUMAnN 4.0 analysis, including Metaphlan
+
+  usage: sbatch C1.humann-metaphlan-wrapper.sh
+            --inputDir /path/to/fastq-input
+            --outDir /path/to/humann-output
+            (--concatenated FALSE) (--paired FALSE)
+            (--dnaRef "") (--normType "Adjusted CPMs")
+            (--resume) (--list "id1 id2 id3 ...") (--help)
+
+  options:
+    [ -i  | --inputDir     | directory containing fastq.gz files                                                                              ]
+    [ -c  | --concatenated | this flag should be given if the input DNA is already concatenated                                               ]
+    [ -p  | --paired       | this flag should be given if the input DNA represents the RNA portion of a paired metatranscriptomics sampleset  ]
+    [ -o  | --outDir       | directory where the output files will be written (including the HUMAnN temp folder)                              ]
+    [ -r  | --dnaRef       | pathname to the Metaphlan profile corresponding to the DNA portion of a paired metatranscriptomics sampleset     ]
+    [ -n  | --normType     | specify the normalization method for output metrics: Adjusted CPMs (default), Adjusted RPKs, RPKs, Counts        ]
+    [ -m  | --resume       | this flag should be given if the run is continuing a previous run                                                ]
+    [ -l  | --list         | list specific sample names (ID prior to first underscore) to run from the input directory                        ]
+    [ -h  | --help         | prints an informational message and exits script                                                                 ]
+EOF
+  exit;
+fi
 
 module load mamba/latest
 source activate /data/biocore/programs/mamba-envs/humann4-env/
@@ -107,7 +142,7 @@ then
     echo "$i"
     sbatch --job-name "$i".C1.humann-metaphlan \
          /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/MGX-MTX_Modules_2025-update/Module_C/C1.humann-metaphlan.sh \
-         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$mode" "$resume"
+         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$mode" "$resume" "$normType"
   done;
 
 elif [ "$use" == "LIST" ];
@@ -120,7 +155,7 @@ then
     echo "$i"
     sbatch --job-name "$i".C1.humann-metaphlan \
          /data/gencore/shared_scripts/github-repos/project-scripts/Referenced_Scripts/MGX-MTX_Modules_2025-update/Module_C/C1.humann-metaphlan.sh \
-         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$mode" "$resume"
+         "$i" "$refDir" "$outDir" "$inputDir" "$concatenate" "$type" "$mode" "$resume" "$normType"
   done;
 
 fi
