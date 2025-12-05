@@ -1,10 +1,11 @@
 #!/bin/bash
 
-#SBATCH -p general
+#SBATCH -p htc
 #SBATCH -q public
 #SBATCH -o slurm.%A.merge.out                # STDOUT (%A = JobId, %a = TaskID)
 #SBATCH -e slurm.%A.merge.err                # STDERR (%A = JobId, %a = TaskID)
 #SBATCH -t 0-4:00                         # estimated time needed
+#SBATCH --mem=16G
 
 module purge
 module load mamba/latest
