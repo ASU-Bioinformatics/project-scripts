@@ -59,6 +59,7 @@ while [ : ]; do
         ;;
     -a | --adapters)
         echo "The fastq file of adapters to trim is '$2'"
+        adapters="$2"
         shift 2
         ;;
     -x | --maxLength)
@@ -143,6 +144,7 @@ for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; do
 do
   ( echo "$i"
   cutadapt -a file:"$adapters" -A file:"$adapters" \
+         -g file:"$adapters" -G file:"$adapters" \
          -m 30 -q 15 --cores=1 \
          -o "$i"_SCT_L001_R1_001.fastq.gz \
          -p "$i"_SCT_L001_R2_001.fastq.gz \
