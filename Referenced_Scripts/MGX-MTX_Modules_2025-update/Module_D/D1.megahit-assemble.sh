@@ -3,15 +3,12 @@
 ##### metagenome assembly using megahit #####
 
 #SBATCH -p highmem
-###SBATCH -p public
 #SBATCH -q public
-###SBATCH -q debug
 #SBATCH --output slurm.%j.MGX.D1.out
 #SBATCH --error slurm.%j.MGX.D1.err
-#SBATCH -c 128
-#SBATCH -t 2-0:00
-###SBATCH -t 0-0:15
-###SBATCH --mem=1024G
+#SBATCH -c 108
+#SBATCH -t 1-0:00
+#SBATCH --mem=512G
 
 module purge
 module load mamba/latest
@@ -87,6 +84,11 @@ if [ "$help" == "TRUE" ]; then
   If multiple samples should be co-assembled (if, for example, you have multiple samples from the same source),
   provide the list of forward read files to the `-forwardReads` parameter and the list of reverse read
   files to the `-reverseReads` parameter, using the same sample order for each.
+
+  The default parameters for this script are 108 cores, 512G memory, and a 24hr limit. For a larger sample,
+  you can adjust those parameters by passing them to SLURM via the command line. Note that the time limit for
+  the highmem partition on Sol is 2 days; if your sample needs more time than that you will need to use the
+  'resume' setting to continue the assembly.
 
   usage: sbatch D1.megahit-assemble.sh
             -f "A.r1.fastq.gz B.r1.fastq.gz" OR -f "forwards.txt"
