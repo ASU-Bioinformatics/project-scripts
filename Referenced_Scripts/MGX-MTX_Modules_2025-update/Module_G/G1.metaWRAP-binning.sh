@@ -6,8 +6,8 @@
 #SBATCH -q public
 #SBATCH --output slurm.%j.MGX.G1.out
 #SBATCH --error slurm.%j.MGX.G1.err
-#SBATCH -c 8
-#SBATCH -t 1-0:00
+#SBATCH -c 32
+#SBATCH -t 2-0:00
 #SBATCH --mem=196G
 ###SBATCH -q debug
 ###SBATCH -p htc
