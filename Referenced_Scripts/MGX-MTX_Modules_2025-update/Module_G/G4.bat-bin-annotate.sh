@@ -4,8 +4,8 @@
 
 #SBATCH -p highmem
 #SBATCH -q public
-#SBATCH -o slurm.%j.G3.out
-#SBATCH -o slurm.%j.G3.err
+#SBATCH -o slurm.%j.G4.out
+#SBATCH -o slurm.%j.G4.err
 #SBATCH -t 4-0:00
 #SBATCH -c 16
 #SBATCH --mem=1024G
@@ -19,7 +19,7 @@
 module load mamba/latest
 
 catEnv="/data/biocore/programs/mamba-envs/catbat-env"
-scriptDir="/data/biocore/programs/CAT_pack-6.0.1/CAT_pack/CAT_pack"
+scriptDir="/data/biocore/programs/CAT_pack-6.0.1/CAT_pack"
 
 # binDir is the absolute path to the directory containing the bin files with extension .fa
 # databaseDir is the absolute path to the CAT database directory
