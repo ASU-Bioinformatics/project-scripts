@@ -1,20 +1,20 @@
 #!/bin/bash
 #SBATCH -c 36
 #SBATCH -N 1
-#SBATCH -p general
+#SBATCH -p public
 #SBATCH -q public #sol only, phx doesn't have an updated STAR module.
 #SBATCH -t 0-8:00
 #SBATCH --mem=100G
-#SBATCH -o slurm.%j.starGG.hare-myx.out
-#SBATCH -e slurm.%j.starGG.hare-myx.err
+#SBATCH -o slurm.%j.starGG.mouse-norRNA.out
+#SBATCH -e slurm.%j.starGG.mouse-norRNA.err
 
 
 module load mamba/latest
 source activate /data/biocore/programs/mamba-envs/biocore-rna
 
-refDir="/data/gencore/databases/reference_genomes/bovine"
-fasta="$refDir"/"GCF_002263795.3_ARS-UCD2.0_genomic.fna"
-gtf="$refDir"/"GCF_002263795.3_ARS-UCD2.0_genomic.gtf"
+refDir="/data/gencore/databases/reference_genomes/GRCm39-no-rRNA"
+fasta="$refDir"/"Mus_musculus.GRCm39.dna.primary_assembly.fa"
+gtf="$refDir"/"Mus_musculus.GRCm39.114.no-rRNA.gtf"
 
 cd "$refDir"
 
