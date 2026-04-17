@@ -75,7 +75,7 @@ fi
 
 cd "$qdir"
 
-python2 "$sdir"/A4.prepDE.py -l 150 -i . #if python3 is saved as python in your path, specify python2 here
+python2 "$sdir"/A4.prepDE.py -l 75 -i . #if python3 is saved as python in your path, specify python2 here
 
 for i in $(find "$qdir" -mindepth 1 -type d | while read F; do basename $F; done)
 do
