@@ -1,6 +1,6 @@
 #!/bin/bash
 
-##### ARG-focused metagenomics analysis using megahit #####
+##### metagenome assembly using megahit #####
 
 #SBATCH -p highmem
 #SBATCH -q public

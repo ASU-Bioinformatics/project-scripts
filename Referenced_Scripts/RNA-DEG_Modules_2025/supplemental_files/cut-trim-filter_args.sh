@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH -p general
-####SBATCH -q public                     # sol QOS
-#SBATCH -q grp_kawoodbu           # phx QOS
+#SBATCH -p public
+#SBATCH -q public                     # sol QOS
+###SBATCH -q grp_kawoodbu           # phx QOS
 #SBATCH -o slurm.%A.out               # STDOUT (%A = JobId, %a = TaskID)
 #SBATCH -e slurm.%A.err               # STDERR (%A = JobId, %a = TaskID)
 #SBATCH -t 0-12:00
@@ -21,7 +21,7 @@ cutadaptDir="$pwd"/fastq-cutadapt
 pairedDir="$pwd"/fastq-cut-paired
 unpairedDir="$pwd"/fastq-cut-unpaired
 adapters="/data/gencore/databases/trimmomatic/all.fa"
-cropLength=250
+cropLength=150
 minLength=50
 environment="/data/biocore/programs/mamba-envs/cutadapt/"
 cut=TRUE
@@ -59,7 +59,6 @@ while [ : ]; do
         ;;
     -a | --adapters)
         echo "The fastq file of adapters to trim is '$2'"
-        adapters="$2"
         shift 2
         ;;
     -x | --maxLength)
@@ -144,7 +143,6 @@ for i in $(find ./ -type f -name "*.fastq.gz" | while read F; do basename $F; do
 do
   ( echo "$i"
   cutadapt -a file:"$adapters" -A file:"$adapters" \
-         -g file:"$adapters" -G file:"$adapters" \
          -m 30 -q 15 --cores=1 \
          -o "$i"_SCT_L001_R1_001.fastq.gz \
          -p "$i"_SCT_L001_R2_001.fastq.gz \

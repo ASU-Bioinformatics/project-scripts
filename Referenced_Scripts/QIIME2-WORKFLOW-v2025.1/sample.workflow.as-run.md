@@ -2,7 +2,7 @@
 
 The goal of this script is to remove any adapter sequences from either end of the reads, which should decrease the number of reads that DADA2 flags as chimeric and removes from the downstream analysis. This is especially valuable for paired-end DADA2, I think.
 
-While the average ITS region is 550bp long (and I would recommend a cut lenth of 290 on a 300bp run), this particular run was a 2x250 so I'm sticking with the default cut length of 250bp. The minimum read length is also the default, 50.
+While the average ITS region is 550bp long (and I would recommend a cut length of 290 on a 300bp run), this particular run was a 2x250 so I'm sticking with the default cut length of 250bp. The minimum read length is also the default, 50.
 
 This script is designed to be run on Phx.
 

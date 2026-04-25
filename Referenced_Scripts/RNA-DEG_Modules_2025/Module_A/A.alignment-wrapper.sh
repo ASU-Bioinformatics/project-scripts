@@ -13,9 +13,10 @@ module purge
 paired="TRUE"
 use="DIRECTORY"
 help="FALSE"
+altRef="FALSE"
 
-VALID_ARGS=$(getopt -o f:i:p:r:a:q:s:tl:h \
-                    --long fastqDir:,intermediateDir:,starParams:,refDir:,alignmentOutDir:,quantOutDir:,scriptDir:,readTypeSingle,list:,help \
+VALID_ARGS=$(getopt -o f:i:p:r:g:a:q:s:tl:h \
+                    --long fastqDir:,intermediateDir:,starParams:,refDir:,alternateGTF:,alignmentOutDir:,quantOutDir:,scriptDir:,readTypeSingle,list:,help \
                     -- "$@")
 if [[ $? -ne 0 ]]; then
   exit 1;
@@ -42,6 +43,11 @@ while [ : ]; do
     -r | --refDir)
         echo "Reference files and STAR indexes are in '$2'"
         refDir="$2"
+        shift 2
+        ;;
+    -g | --alternateGTF)
+        echo "An alternate GTF file, '$2', will be used for HTSeq Count after alignment"
+        altRef="$2"
         shift 2
         ;;
     -a | --alignmentOutDir)
@@ -101,10 +107,11 @@ if [ "$help" == "TRUE" ]; then
                 (-t) (-h)
 
   options:
-    [ -f  |   --fastqDir          |   directory containing gzipped fastq files, named with standard Illumina formatting (ie, sid-1_S01_L001_R1.fastq*)  ]
+    [ -f  |   --fastqDir          |   directory containing gzipped fastq files, named with standard Illumina formatting (ie, sid-1_S01_L001_R1.fastq*)    ]
     [ -i  |   --intermediateDir   |   FIFO-enabled server for STAR alignment                                                                              ]
     [ -p  |   --starParams        |   text file containing STAR parameters (see examples in scripts folder)                                               ]
     [ -r  |   --refDir            |   directory containing the reference genome, GTF file, and STAR indexes - must contain STAR genomeParamers.txt        ]
+    [ -g  |   --altRef            |   full pathname to an alternate GTF file used for HTSeq Count only (for example, excluding rRNA reads)                ]
     [ -a  |   --alignmentOutDir   |   location for output alignment files (eg, sorted bam files)                                                          ]
     [ -q  |   --quantOutDir       |   location for output stringtie quantification files (eg, transcript abundance tables for each sample)                ]
     [ -s  |   --scriptDir         |   directory where the auxiliary python and perl scripts can be found (scripts A4-A7)                                  ]
@@ -115,8 +122,12 @@ EOF
   exit;
 fi
 
-pathGTF=$(grep 'sjdbGTFfile' "$refDir"/genomeParameters.txt | tail -n 1 | awk '{ printf $2 }')
-refGTF=$(basename $pathGTF)
+if [ "$altRef" == "FALSE" ];
+then
+  refGTF=$(grep 'sjdbGTFfile' "$refDir"/genomeParameters.txt | tail -n 1 | awk '{ printf $2 }')
+else
+  refGTF="$altRef"
+fi
 
 if [ "$use" == "DIRECTORY" ];
 then
@@ -145,7 +156,7 @@ quant=$(sbatch --dependency=afterok:"$align" --array=0-$((count-1)) --parsable -
             --list "$list" \
             --alignmentDir "$alignmentOutDir" \
             --quantDir "$quantOutDir" \
-            --refGTF "$refDir"/"$refGTF")
+            --refGTF "$refGTF")
 
 merge=$(sbatch --dependency=afterok:"$quant" --parsable --export=ALL \
         "$scriptDir"/A3.merge-quant.sh \

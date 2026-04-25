@@ -135,7 +135,7 @@ if [ "$help" == "TRUE" ]; then
     [ -f  |   --fastqDir     |   directory containing gzipped fastq files, named with standard Illumina formatting (ie, sid-1_S01_L001_R1.fastq*)               ]
     [ -q  |   --qiimeDir     |   directory for Qiime2 output files (will be created if it doesn't already exist; previous files will be overwritten)            ]
     [ -m  |   --metadata     |   text file containing metadata information in Qiime2-compatible format                                                          ]
-    [ -p  |   --pairing      |   the read pairing for the sequencing. Allowable options are p, s, and ps (paired, single, and paired load with single DADA2)    ]
+    [ -p  |   --pairing      |   the read pairing for the sequencing. Allowable options are p, s, and ps (paired, single, and paired reads with single DADA2)    ]
     [ -i  |   --inputFiles   |   the absolute path of a fastq manifest file in Qiime2-compatible format; default is to generate this from the fastqDir          ]
     [ -o  |   --mode         |   the modules within the script to run - options are "all" or any combination of "demux", "dada2", and "stats" in a quoted list  ]
                                    to run "dada2", input demux files must be in the Qiime2 output folder and named according to the script parameters for       ]
@@ -165,25 +165,25 @@ then
 
   touch int1.txt
   echo "sample-id" > int1.txt
-  find $(readlink -f ..) -type f -name "*_R2*.fastq*" | sort | uniq \
+  find $(readlink -f .) -type f -name "*_R2*.fastq*" | sort | uniq \
     | while read F; do basename $F; done \
     |cut -d '_' -f 1 >> int1.txt
 
   touch int2.txt
 
-  if [ "$pairing" == "s" ];
+  if [ "$inputPairing" == "single" ];
   then
     echo "absolute-filepath" > int2.txt
-    for i in $(find $(readlink -f ..) -type f -name "*_R1*.fastq*" | sort | uniq ); do echo $i; done >> int2.txt
+    for i in $(find $(readlink -f .) -type f -name "*_R1*.fastq*" | sort | uniq ); do echo $i; done >> int2.txt
     paste int1.txt int2.txt > fq_manifest.tsv
     rm int*.txt
   else
     echo "forward-absolute-filepath" > int2.txt
-    for i in $(find $(readlink -f ..) -type f -name "*_R1*.fastq*" | sort | uniq ); do echo $i; done >> int2.txt
+    for i in $(find $(readlink -f .) -type f -name "*_R1*.fastq*" | sort | uniq ); do echo $i; done >> int2.txt
     touch int3.txt
 
     echo "reverse-absolute-filepath" > int3.txt
-    for i in $(find $(readlink -f ..) -type f -name "*_R2*.fastq*" | sort | uniq ); do echo $i; done >> int3.txt
+    for i in $(find $(readlink -f .) -type f -name "*_R2*.fastq*" | sort | uniq ); do echo $i; done >> int3.txt
     paste int1.txt int2.txt int3.txt > fq_manifest.tsv
     rm int*.txt
   fi
@@ -197,7 +197,7 @@ cd "$qiimeDir"
 # next, it will create a visual summary of the demultiplexed data
 if [ "$runDemux" == "TRUE" ];
 then
-  if [ "$pairing" == "s" ];
+  if [ "$inputPairing" == "single" ];
   then
     qiime tools import \
     --type 'SampleData[SequencesWithQuality]' \
