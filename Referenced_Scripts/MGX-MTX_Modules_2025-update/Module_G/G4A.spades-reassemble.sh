@@ -11,8 +11,8 @@
 module load mamba/latest
 
 python /data/biocore/programs/SPAdes/SPAdes-3.15.5-Linux/bin/spades.py --careful \
-  -1 /data/gencore/analysis_projects/8718394_Alsanea/metawrap-bins/Bucket/reassembled_bins/reads_for_reassembly/bin.1.permissive_1.fastq \
-  -2 /data/gencore/analysis_projects/8718394_Alsanea/metawrap-bins/Bucket/reassembled_bins/reads_for_reassembly/bin.1.permissive_2.fastq \
-  --trusted-contigs /data/gencore/analysis_projects/8718394_Alsanea/metawrap-bins/Bucket/refined_bins/metawrap_70_5_bins/bin.1.fa \
-  -o /data/gencore/analysis_projects/8718394_Alsanea/metawrap-bins/Bucket/spades_reassembled_bins/ \
-  --memory 128 --threads 32
+  -1 /data/gencore/analysis_projects/8718394_Alsanea/metawrap-bins/Bucket/reassembled_bins/reads_for_reassembly/bin.1.strict_1.fastq \
+  -2 /data/gencore/analysis_projects/8718394_Alsanea/metawrap-bins/Bucket/reassembled_bins/reads_for_reassembly/bin.1.strict_2.fastq \
+  --trusted-contigs /data/gencore/analysis_projects/8718394_Alsanea/metawrap-bins/Bucket/refined_bins/metawrap_70_5_bins/ncbi-pass-filter/bin.1.fa \
+  -o /data/gencore/analysis_projects/8718394_Alsanea/metawrap-bins/Bucket/spades_bin.1_strict/ \
+  --memory 128 --threads 196
