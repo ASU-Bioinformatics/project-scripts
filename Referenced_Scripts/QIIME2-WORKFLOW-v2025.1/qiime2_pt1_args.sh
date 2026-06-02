@@ -10,8 +10,6 @@
 #SBATCH -c 2
 #SBATCH --mem=128G
 
-umask 0007
-
 fastqDir="$pwd"/fastq
 qiimeDir="$pwd"/qiime2
 metadata="$pwd"/metadata.txt
@@ -78,28 +76,6 @@ while [ : ]; do
         ;;
     -o | --mode)
         mode="$2"
-        for x in $mode;
-        do
-          if [ $x == "all" ];
-          then
-            runDemux="TRUE"
-            runDada2="TRUE"
-            runStats="TRUE"
-          fi
-          if [ $x == "demux" ];
-          then
-            runDemux="TRUE"
-          fi
-          if [ $x == "dada2" ];
-          then
-            runDada2="TRUE"
-          fi
-          if [ $x == "stats" ];
-          then
-            runStats="TRUE"
-          fi
-        done
-        echo "The following steps will be performed: '$2'"
         shift 2
         ;;
     -e | --environment)
@@ -158,6 +134,29 @@ source activate "$environment"
 
 # make fastq manifest file - this lets us run qiime without having to rename the files
 # if they aren't in the traditional Casava naming format (which the more modern machines aren't)
+
+for x in $mode;
+do
+  if [ $x == "all" ];
+  then
+    runDemux="TRUE"
+    runDada2="TRUE"
+    runStats="TRUE"
+  fi
+  if [ $x == "demux" ];
+  then
+    runDemux="TRUE"
+  fi
+  if [ $x == "dada2" ];
+  then
+    runDada2="TRUE"
+  fi
+  if [ $x == "stats" ];
+  then
+    runStats="TRUE"
+  fi
+done
+echo "The following steps will be performed: '$mode'"
 
 if [ "$manifest" == "FALSE" ];
 then
@@ -263,5 +262,3 @@ then
     --i-data "$qiimeDir"/rep-seqs-"$inputPairing"-"$dada2".qza \
     --o-visualization "$qiimeDir"/rep-seqs-"$inputPairing"-"$dada2".qzv
 fi
-
-chmod -R g+w *
