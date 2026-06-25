@@ -4,8 +4,8 @@
 
 #SBATCH -p public
 #SBATCH -q public
-#SBATCH -o slurm.%j.out                   # STDOUT (%j = JobId)
-#SBATCH -e slurm.%j.err                   # STDERR (%j = JobId)
+#SBATCH -o slurm.%j.q2tax.out                   # STDOUT (%j = JobId)
+#SBATCH -e slurm.%j.q2tax.err                   # STDERR (%j = JobId)
 #SBATCH -t 0-8:00                         # estimated time needed (dada2 can take a while)
 #SBATCH --mem=128G
 

@@ -4,8 +4,8 @@
 
 #SBATCH -p public
 #SBATCH -q public
-#SBATCH -o slurm.%j.out                   # STDOUT (%j = JobId)
-#SBATCH -e slurm.%j.err                   # STDERR (%j = JobId)
+#SBATCH -o slurm.%j.q2phylo.out                   # STDOUT (%j = JobId)
+#SBATCH -e slurm.%j.q2phylo.err                   # STDERR (%j = JobId)
 #SBATCH -t 0-8:00                         # estimated time needed (dada2 can take a while)
 #SBATCH --mem=128G
 
@@ -109,7 +109,6 @@ if [ "$help" == "TRUE" ]; then
             -q /path/to/qiime-output -m /path/to/metadata.txt
             -c "list of categorical columns" -n "list of numerical columns"
             -s ps -x 10000 -d 100
-            -r 2024.09.greengenes.backbone.full-length.nb.sklearn-1.4.2.qza
             -e /path/to/conda/environment (-p) (-h)
 
   options:
