@@ -102,10 +102,10 @@ done
 
 if [ "$help" == "TRUE" ]; then
   cat << EOF
-  This script runs the first part of our standard Qiime2 analysis (loading the data, denoising,
-  and summarizing statistics by metadata information).
+  This script runs the metadata-and-phylogeny-based analysis of microbial samples,
+  following dada2 denoising.
 
-  usage: sbatch qiime2_pt2_args.sh
+  usage: sbatch qiime2_pt2_phylogeny_args.sh
             -q /path/to/qiime-output -m /path/to/metadata.txt
             -c "list of categorical columns" -n "list of numerical columns"
             -s ps -x 10000 -d 100
