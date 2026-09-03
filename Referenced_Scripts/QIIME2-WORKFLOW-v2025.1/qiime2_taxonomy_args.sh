@@ -6,8 +6,8 @@
 #SBATCH -q public
 #SBATCH -o slurm.%j.q2tax.out                   # STDOUT (%j = JobId)
 #SBATCH -e slurm.%j.q2tax.err                   # STDERR (%j = JobId)
-#SBATCH -t 0-8:00                         # estimated time needed (dada2 can take a while)
-#SBATCH --mem=128G
+#SBATCH -t 0-4:00                         # estimated time needed (dada2 can take a while)
+#SBATCH --mem=96G
 
 module purge
 module load mamba/latest
@@ -60,7 +60,6 @@ while [ : ]; do
             inputStrand="paired"
             dada2="single"
         fi
-
         shift 2
         ;;
     -r | --classifier)

@@ -6,8 +6,8 @@
 #SBATCH -q public
 #SBATCH -o slurm.%j.q2phylo.out                   # STDOUT (%j = JobId)
 #SBATCH -e slurm.%j.q2phylo.err                   # STDERR (%j = JobId)
-#SBATCH -t 0-8:00                         # estimated time needed (dada2 can take a while)
-#SBATCH --mem=128G
+#SBATCH -t 0-8:00                         
+#SBATCH --mem=32G
 
 module purge
 module load mamba/latest
@@ -75,10 +75,12 @@ while [ : ]; do
         ;;
     -x | --samplingDepth)
         echo "Rarefaction curve sampling will max at '$2'"
+        samplingDepth="$2"
         shift 2
         ;;
     -d | --minDepth)
         echo "Rarefaction curve sampling will start at '$2'"
+        minDepth="$2"
         shift 2
         ;;
     -e | --environment)
@@ -239,4 +241,3 @@ qiime diversity alpha-rarefaction \
   --p-iterations 10 \
   --m-metadata-file "$metadata" \
   --o-visualization alpha-rarefaction-"$inputStrand"-"$dada2"-"$samplingDepth".qzv
-fi
