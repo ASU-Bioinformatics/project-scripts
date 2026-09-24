@@ -114,7 +114,7 @@ fi
 
 source activate "$environment"
 
-mkdir -p "$qiimeDir"/"$classifier"-taxonomy
+mkdir -p "$qiimeDir"/"$class"-taxonomy
 cd "$qiimeDir"/"$class"-taxonomy
 
 # Taxonomic analysis with selected classifier
