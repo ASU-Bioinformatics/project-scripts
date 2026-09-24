@@ -230,7 +230,8 @@ then
       --p-n-threads 0 \
       --o-representative-sequences "$qiimeDir"/rep-seqs-"$inputPairing"-"$dada2".qza \
       --o-table "$qiimeDir"/table-"$inputPairing"-"$dada2".qza \
-      --o-denoising-stats "$qiimeDir"/stats-dada2-"$inputPairing"-"$dada2".qza
+      --o-denoising-stats "$qiimeDir"/stats-dada2-"$inputPairing"-"$dada2".qza \
+      --o-base-transition-stats "$qiimeDir"/base-transition-stats-"$inputPairing"-"$dada2".qza
   else
     qiime dada2 denoise-paired \
       --i-demultiplexed-seqs "$qiimeDir"/demux-"$inputPairing".qza \
@@ -239,7 +240,8 @@ then
       --p-n-threads 0 \
       --o-representative-sequences "$qiimeDir"/rep-seqs-"$inputPairing"-"$dada2".qza \
       --o-table "$qiimeDir"/table-"$inputPairing"-"$dada2".qza \
-      --o-denoising-stats "$qiimeDir"/stats-dada2-"$inputPairing"-"$dada2".qza
+      --o-denoising-stats "$qiimeDir"/stats-dada2-"$inputPairing"-"$dada2".qza \
+      --o-base-transition-stats "$qiimeDir"/base-transition-stats-"$inputPairing"-"$dada2".qza
   fi
 fi
 
@@ -255,8 +257,10 @@ then
 
   qiime feature-table summarize \
     --i-table "$qiimeDir"/table-"$inputPairing"-"$dada2".qza \
-    --o-visualization "$qiimeDir"/table-"$inputPairing"-"$dada2".qzv \
-    --m-sample-metadata-file "$metadata"
+    --o-feature-frequencies "$qiimeDir"/feature-frequencies-"$inputPairing"-"$dada2".qza \
+    --o-sample-frequencies "$qiimeDir"/sample-frequencies-"$inputPairing"-"$dada2".qza \
+    --o-summary "$qiimeDir"/table-"$inputPairing"-"$dada2".qzv \
+    --m-metadata-file "$metadata"
 
   qiime feature-table tabulate-seqs \
     --i-data "$qiimeDir"/rep-seqs-"$inputPairing"-"$dada2".qza \
