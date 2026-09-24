@@ -65,6 +65,7 @@ while [ : ]; do
     -r | --classifier)
         echo "The classifier to use for taxonomic analysis is '$2'"
         classifier="$2"
+        class=$(basename "$classifier")
         shift 2
         ;;
     -e | --environment)
@@ -114,7 +115,7 @@ fi
 source activate "$environment"
 
 mkdir -p "$qiimeDir"/"$classifier"-taxonomy
-cd "$qiimeDir"/"$classifier"-taxonomy
+cd "$qiimeDir"/"$class"-taxonomy
 
 # Taxonomic analysis with selected classifier
 echo $classifier
