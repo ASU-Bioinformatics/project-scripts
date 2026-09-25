@@ -6,7 +6,7 @@
 #SBATCH -q public
 #SBATCH -o slurm.%j.q2phylo.out                   # STDOUT (%j = JobId)
 #SBATCH -e slurm.%j.q2phylo.err                   # STDERR (%j = JobId)
-#SBATCH -t 0-8:00                         
+#SBATCH -t 0-8:00
 #SBATCH --mem=32G
 
 module purge
@@ -17,7 +17,7 @@ umask 0007
 
 qiimeDir="$pwd"/qiime2
 metadata="$pwd"/metadata.txt
-environment="/data/biocore/programs/mamba-envs/qiime2-amplicon-2025.7/"
+environment="/data/biocore/programs/mamba-envs/qiime2-2026.7/"
 samplingDepth=10000
 minDepth=100
 inputStrand="paired"
