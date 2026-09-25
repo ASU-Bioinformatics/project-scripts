@@ -24,8 +24,8 @@ runDada2="FALSE"
 runStats="FALSE"
 mode="all"
 
-VALID_ARGS=$(getopt -o f:q:m:p:i:o:e:h \
-                    --long fastqDir:,qiimeDir:,metadata:,pairing:,inputManifest:,mode:,environment:,help \
+VALID_ARGS=$(getopt -o f:q:m:p:i:o:c:e:h \
+                    --long fastqDir:,qiimeDir:,metadata:,pairing:,inputManifest:,mode:,cutLength:,environment:,help \
                     -- "$@")
 if [[ $? -ne 0 ]]; then
   exit 1;
@@ -78,6 +78,10 @@ while [ : ]; do
         mode="$2"
         shift 2
         ;;
+    -c | --cutLength)
+        cutLen="$2"
+        shift 2
+        ;;
     -e | --environment)
         echo "The conda environment to use is '$2'"
         environment="$2"
@@ -111,7 +115,7 @@ if [ "$help" == "TRUE" ]; then
     [ -f  |   --fastqDir     |   directory containing gzipped fastq files, named with standard Illumina formatting (ie, sid-1_S01_L001_R1.fastq*)               ]
     [ -q  |   --qiimeDir     |   directory for Qiime2 output files (will be created if it doesn't already exist; previous files will be overwritten)            ]
     [ -m  |   --metadata     |   text file containing metadata information in Qiime2-compatible format                                                          ]
-    [ -p  |   --pairing      |   the read pairing for the sequencing. Allowable options are p, s, and ps (paired, single, and paired reads with single DADA2)    ]
+    [ -p  |   --pairing      |   the read pairing for the sequencing. Allowable options are p, s, and ps (paired, single, and paired reads with single DADA2)   ]
     [ -i  |   --inputFiles   |   the absolute path of a fastq manifest file in Qiime2-compatible format; default is to generate this from the fastqDir          ]
     [ -o  |   --mode         |   the modules within the script to run - options are "all" or any combination of "demux", "dada2", and "stats" in a quoted list  ]
                                    to run "dada2", input demux files must be in the Qiime2 output folder and named according to the script parameters for       ]
@@ -119,6 +123,7 @@ if [ "$help" == "TRUE" ]; then
                                    to run "stats", input dada2 files must be in the Qiime2 output folder and named according to the script parameters for       ]
                                    read pairing and dada2 pairing; for example, stats-dada2-paired-single.qza for a file generated with paired-end input reads  ]
                                    and single-end DADA2 processing. The stats, table, and rep-seqs qza files need to be present in the Qiime2 output directory  ]
+    [ -c  |   --cutLength    |   truncation length for forward and reverse reads in DADA2 denoising - useful when quality drops at the end of the reads         ]
     [ -e  |   --environment  |   location for the Qiime2 environment to activate                                                                                ]
     [ -h  |   --help         |   prints an informational message and exits script                                                                               ]
 EOF
